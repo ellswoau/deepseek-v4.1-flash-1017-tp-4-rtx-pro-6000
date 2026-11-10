@@ -56,3 +56,19 @@ On the Sybil build with an engine cap of 32, steady throughput kept scaling to 1
 - A forced-length prose probe (`ignore_eos` past the natural end) gives about 80 tok/s single-stream, because DSpark acceptance collapses on filler. Do not use it to judge speed.
 - With `--tool-call-parser deepseekv41`, `/v1/chat/completions` uses SGLang's native V4.1 encoder. The checkpoint's `chat_template.jinja` is not used.
 - Smoke results on both builds: 8/8 tool round trips with an 18,314-token system prompt (warm calls 0.3–0.5 s through the prefix cache), strict JSON schema, thinking via `reasoning_effort`, and single-image vision.
+
+## 4. Host-memory baseline before the DIMM change (4 of 8 channels)
+
+The tested host ran 4 × 128 GB DDR5-6400, populating 4 of the Xeon's 8 memory channels. This baseline was recorded before moving to 8 channels. Raw output is in [raw/dimm-4ch-before/](raw/dimm-4ch-before/).
+
+| Measurement | 4 channels |
+|---|---:|
+| STREAM Triad / Copy, 36 threads, 4 GiB arrays ([benchmarks/stream.c](../benchmarks/stream.c)) | 129 / 115 GB/s (theoretical 204.8) |
+| STREAM Triad, 18 threads | 121 GB/s |
+| NCCL all_reduce busbw, default (SHM transport), 8M–1G | 20.4 GB/s |
+| NCCL alltoall busbw, default (SHM) | 20.3 GB/s (algbw 27.5) |
+| NCCL all_reduce / alltoall busbw, `NCCL_P2P_LEVEL=SYS` | 24.9 / 2.0 GB/s |
+| Raw P2P per pair, unidirectional / bidirectional | 38–42 / 73–76 GB/s |
+| Raw P2P, all 12 directed pairs concurrently | 79–86 GB/s total |
+
+Expectation: decode is GPU-bound, and Engram lookups are latency-bound (a few KB per token), so decode should change by less than about 5%. NCCL's default SHM collectives stage every byte through host DRAM. At an alltoall algorithm bandwidth of about 27.5 GB/s per GPU, they already move roughly as much traffic as STREAM can sustain. Prefill-heavy and high-concurrency agent work (EP all-to-all) is therefore where 8 channels could show up.

@@ -1,0 +1,9 @@
+== 2026-11-10T23:22:58Z baseline 4ch-before
+CPU(s):                                  36
+Model name:                              Intel(R) Xeon(R) 654
+Thread(s) per core:                      2
+CPU(s) scaling MHz:                      64%
+L3 cache:                                72 MiB (1 instance)
+NUMA node(s):                            1
+               total        used        free      shared  buff/cache   available
+Mem:             498         347          10         309         454         151
