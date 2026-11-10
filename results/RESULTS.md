@@ -72,3 +72,22 @@ The tested host ran 4 × 128 GB DDR5-6400, populating 4 of the Xeon's 8 memory c
 | Raw P2P, all 12 directed pairs concurrently | 79–86 GB/s total |
 
 Expectation: decode is GPU-bound, and Engram lookups are latency-bound (a few KB per token), so decode should change by less than about 5%. NCCL's default SHM collectives stage every byte through host DRAM. At an alltoall algorithm bandwidth of about 27.5 GB/s per GPU, they already move roughly as much traffic as STREAM can sustain. Prefill-heavy and high-concurrency agent work (EP all-to-all) is therefore where 8 channels could show up.
+
+## 5. Prefix cache and HiCache (Phase 6)
+
+**Multi-turn prefix cache: works.** The test conversation was 52–56K tokens. Each turn resent the full history, including the model's previous answer, plus about 1.8K new tokens. Thinking was tested both off and on (`reasoning_effort=high`).
+
+| | Turn 1 (cold) | Turn 2 | Turn 3 | Cached tokens on resend (engine log) |
+|---|---:|---:|---:|---|
+| thinking off | 9.3 s³ | 0.27 s | 0.26 s | 52,224 / 54,016 |
+| thinking on | 5.3 s | 0.26 s | 0.29 s | 52,224 / 53,760 / 55,808 |
+
+³ includes first-request warm-up after start. A cold 52K prefill is otherwise about 5 s.
+
+The whole previous prefix is reused (256-token pages). There is no cap around 11.5K tokens (sglang#43738).
+
+**HiCache reload after GPU eviction: does not work for V4.1 on v0.5.23 in this configuration.** The test sent 4.73M tokens of unique traffic, then resent the conversation. TTFT was 5.95 s, identical to a cold prefill of the same size, and the engine logged no host load-back.
+
+HiCache does write KV to host RAM: 4.9M of 16.8M host tokens were used and none were dropped. The problem is the size of the host pool for sliding-window state. `_deepseek_v4_num_host_pages` sets it to device SWA pages × `hicache_ratio` (here 186 × 4 = 744 pages). A hybrid-SWA prefix cannot be matched without its window state.
+
+A stepwise test showed that a 48K conversation stays reusable through 850K tokens of other traffic (0.15 s TTFT), but not through 2.35M, which is well before the 4.2M-token GPU pool fills.
