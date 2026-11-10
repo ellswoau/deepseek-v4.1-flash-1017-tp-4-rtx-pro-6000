@@ -1,0 +1,10 @@
+.git
+.env
+state
+models
+results
+tests
+benchmarks
+host
+__pycache__
+*.log

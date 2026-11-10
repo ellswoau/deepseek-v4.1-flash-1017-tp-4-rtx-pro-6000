@@ -1,0 +1,4 @@
+00000000:0B:00.0 gen5 x16 (44 busy samples)
+00000000:71:00.0 gen5 x16 (44 busy samples)
+00000000:CD:00.0 gen5 x16 (43 busy samples)
+00000000:DD:00.0 gen5 x16 (43 busy samples)

@@ -1,0 +1,16 @@
+The deployment scripts, configuration, tests, benchmarks and adapter/sitecustomize.py in this
+repository are provided under the MIT license in LICENSE.
+
+adapter/sitecustomize.py includes a port of the DSV4 indexer-metadata fix from
+sybil-solutions/deepseek-v4.1-flash-4x-rtx-pro-6000 (MIT, Copyright (c) 2026 0xSero; see
+LICENSE.sybil). The candidate-indexer guard in the same file is new in this repository.
+
+runtime/flash_mla_sm120.py is derived from SGLang v0.5.23
+(python/sglang/kernels/ops/attention/flash_mla_sm120.py) and remains licensed under the
+Apache License 2.0; see LICENSE.sglang. It carries the extra-source page-splitting fix first
+published in the Sybil repository, distributed under the same Apache-2.0 terms.
+runtime/flash_mla_sm120.upstream-v0.5.23.py is the unmodified upstream file, included for
+reference; runtime/flash_mla_sm120.patch is the exact difference.
+
+SGLang, FlashInfer, DeepGEMM, PyTorch, NVIDIA components and the DeepSeek model retain their
+respective upstream licenses. This repository does not redistribute model weights.

@@ -1,0 +1,9 @@
+# Pin the engine to four specific GPUs (recommended when the host has more than four).
+# Get UUIDs with `nvidia-smi -L`, copy this file to compose.pin-gpus.yaml, fill in the IDs, then:
+#   docker compose -f compose.yaml -f compose.pin-gpus.yaml up --build -d
+services:
+  deepseek:
+    gpus: !override
+      - driver: nvidia
+        device_ids: ["GPU-xxxxxxxx-...", "GPU-xxxxxxxx-...", "GPU-xxxxxxxx-...", "GPU-xxxxxxxx-..."]
+        capabilities: [gpu]

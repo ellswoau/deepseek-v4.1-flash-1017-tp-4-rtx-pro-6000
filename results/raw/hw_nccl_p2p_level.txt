@@ -1,0 +1,58 @@
+W: https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+=================== NCCL_P2P_LEVEL=default
+    67108864      16777216     float     sum      -14c8d0439f2c4:5552:5582 [1] NCCL INFO Channel 00 : 1[1] -> 2[2] via SHM/direct/direct
+   134217728      33554432     float     sum      -1  12128.8   11.07   16.60       0  11912.6   11.27   16.90       0
+   268435456      67108864     float     sum      -1  23826.1   11.27   16.90       0  23961.8   11.20   16.80       0
+   536870912     134217728     float     sum      -1  48645.2   11.04   16.55       0  50039.6   10.73   16.09       0
+  1073741824     268435456     float     sum      -1  97405.6   11.02   16.54       0  96897.2   11.08   16.62       0
+# Avg bus bandwidth    : 16.7748 
+4c8d0439f2c4:5552:5580 [3] NCCL INFO Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+4c8d0439f2c4:5552:5580 [3] NCCL INFO Channel 01 : 3[3] -> 0[0] via SHM/direct/direct
+4c8d0439f2c4:5552:5580 [3] NCCL INFO Channel 02 : 3[3] -> 0[0] via SHM/direct/direct
+4c8d0439f2c4:5552:5580 [3] NCCL INFO Channel 03 : 3[3] -> 0[0] via SHM/direct/direct
+4c8d0439f2c4:5552:5581 [2] NCCL INFO Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+4c8d0439f2c4:5552:5581 [2] NCCL INFO Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+4c8d0439f2c4:5552:5581 [2] NCCL INFO Channel 02 : 2[2] -> 3[3] via SHM/direct/direct
+4c8d0439f2c4:5552:5581 [2] NCCL INFO Channel 03 : 2[2] -> 3[3] via SHM/direct/direct
+4c8d0439f2c4:5552:5582 [1] NCCL INFO Channel 01 : 1[1] -> 2[2] via SHM/direct/direct
+4c8d0439f2c4:5552:5582 [1] NCCL INFO Channel 02 : 1[1] -> 2[2] via SHM/direct/direct
+4c8d0439f2c4:5552:5582 [1] NCCL INFO Channel 03 : 1[1] -> 2[2] via SHM/direct/direct
+4c8d0439f2c4:5552:5583 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+4c8d0439f2c4:5552:5583 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+4c8d0439f2c4:5552:5583 [0] NCCL INFO Channel 02 : 0[0] -> 1[1] via SHM/direct/direct
+4c8d0439f2c4:5552:5583 [0] NCCL INFO Channel 03 : 0[0] -> 1[1] via SHM/direct/direct
+    67108864       4194304     float    none      -1  2437.81   27.53   20.65       0  2508.35   26.75   20.07    N/A
+   134217728       8388608     float    none      -1  4869.41   27.56   20.67       0  5035.16   26.66   19.99    N/A
+   268435456      16777216     float    none      -1  9758.87   27.51   20.63       0  10077.2   26.64   19.98    N/A
+   536870912      33554432     float    none      -1  20927.9   25.65   19.24       0  20901.7   25.69   19.26    N/A
+  1073741824      67108864     float    none      -1  43385.7   24.75   18.56       0  43314.8   24.79   18.59    N/A
+# Avg bus bandwidth    : 19.7643 
+=================== NCCL_P2P_LEVEL=SYS
+    67108864      16777216     float     sum      -14c8d0439f2c4:5614:5634 [3] NCCL INFO Allocated shareable buffer 0x717d33000000 size 10485760 ipcDesc 0x717c3c004940
+   134217728      33554432     float     sum      -1  8036.41   16.70   25.05       0  8049.96   16.67   25.01       0
+   268435456      67108864     float     sum      -1  15901.0   16.88   25.32       0  15803.9   16.99   25.48       0
+   536870912     134217728     float     sum      -1  31051.2   17.29   25.93       0  31079.5   17.27   25.91       0
+  1073741824     268435456     float     sum      -1  61592.6   17.43   26.15       0  61565.5   17.44   26.16       0
+# Avg bus bandwidth    : 25.3613 
+4c8d0439f2c4:5614:5642 [3] NCCL INFO Channel 00/0 : 3[3] -> 0[0] via P2P/direct pointer
+4c8d0439f2c4:5614:5642 [3] NCCL INFO Channel 01/0 : 3[3] -> 0[0] via P2P/direct pointer
+4c8d0439f2c4:5614:5642 [3] NCCL INFO Channel 02/0 : 3[3] -> 0[0] via P2P/direct pointer
+4c8d0439f2c4:5614:5642 [3] NCCL INFO Channel 03/0 : 3[3] -> 0[0] via P2P/direct pointer
+4c8d0439f2c4:5614:5643 [2] NCCL INFO Channel 00/0 : 2[2] -> 3[3] via P2P/direct pointer
+4c8d0439f2c4:5614:5643 [2] NCCL INFO Channel 01/0 : 2[2] -> 3[3] via P2P/direct pointer
+4c8d0439f2c4:5614:5643 [2] NCCL INFO Channel 02/0 : 2[2] -> 3[3] via P2P/direct pointer
+4c8d0439f2c4:5614:5643 [2] NCCL INFO Channel 03/0 : 2[2] -> 3[3] via P2P/direct pointer
+4c8d0439f2c4:5614:5644 [1] NCCL INFO Channel 00/0 : 1[1] -> 2[2] via P2P/direct pointer
+4c8d0439f2c4:5614:5644 [1] NCCL INFO Channel 01/0 : 1[1] -> 2[2] via P2P/direct pointer
+4c8d0439f2c4:5614:5644 [1] NCCL INFO Channel 02/0 : 1[1] -> 2[2] via P2P/direct pointer
+4c8d0439f2c4:5614:5644 [1] NCCL INFO Channel 03/0 : 1[1] -> 2[2] via P2P/direct pointer
+4c8d0439f2c4:5614:5645 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] via P2P/direct pointer
+4c8d0439f2c4:5614:5645 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] via P2P/direct pointer
+4c8d0439f2c4:5614:5645 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] via P2P/direct pointer
+4c8d0439f2c4:5614:5645 [0] NCCL INFO Channel 03/0 : 0[0] -> 1[1] via P2P/direct pointer
+    67108864       4194304     float    none      -1  23403.3    2.87    2.15       0  23468.2    2.86    2.14    N/A
+   134217728       8388608     float    none      -1  46165.1    2.91    2.18       0  46403.2    2.89    2.17    N/A
+   268435456      16777216     float    none      -1  92200.9    2.91    2.18       0  92024.5    2.92    2.19    N/A
+   536870912      33554432     float    none      -1   183908    2.92    2.19       0   182465    2.94    2.21    N/A
+  1073741824      67108864     float    none      -1   366841    2.93    2.20       0   364976    2.94    2.21    N/A
+# Avg bus bandwidth    : 2.18143 

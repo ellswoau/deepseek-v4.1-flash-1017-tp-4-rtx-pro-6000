@@ -1,0 +1,84 @@
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 13.0.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+W: https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/InRelease: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+Setting up git (1:2.43.0-1ubuntu7.4) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.5) ...
+nccl-tests commit: afd59abab774a6a4b492eb344bd0c845a0b7bb4d
+libnccl2 2.28.3-1+cuda13.0
+=== all_reduce_perf
+# nccl-tests version 2.21.1 (afd59ab) nccl-headers=22803 nccl-library=22803
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 1073741824 step: 2(factor) warmup iters: 1 iters: 100 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid   5557 on 9fa61c3793cc device  0 [0000:0b:00] NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+#  Rank  1 Group  0 Pid   5557 on 9fa61c3793cc device  1 [0000:71:00] NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+#  Rank  2 Group  0 Pid   5557 on 9fa61c3793cc device  2 [0000:cd:00] NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+#  Rank  3 Group  0 Pid   5557 on 9fa61c3793cc device  3 [0000:dd:00] NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+NCCL version 2.28.3+cuda13.0
+#
+#                                                              out-of-place                       in-place
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)        
+     1048576        262144     float     sum      -1    97.62   10.74   16.11       0    97.09   10.80   16.20       0
+     2097152        524288     float     sum      -1   181.73   11.54   17.31       0   181.04   11.58   17.38       0
+     4194304       1048576     float     sum      -1   333.47   12.58   18.87       0   334.81   12.53   18.79       0
+     8388608       2097152     float     sum      -1   639.51   13.12   19.68       0   639.55   13.12   19.67       0
+    16777216       4194304     float     sum      -1  1244.33   13.48   20.22       0  1244.03   13.49   20.23       0
+    33554432       8388608     float     sum      -1  2555.65   13.13   19.69       0  2559.57   13.11   19.66       0
+    67108864      16777216     float     sum      -1  5657.96   11.86   17.79       0  5787.88   11.59   17.39       0
+   134217728      33554432     float     sum      -1  11472.6   11.70   17.55       0  11606.7   11.56   17.35       0
+   268435456      67108864     float     sum      -1  23586.2   11.38   17.07       0  24863.6   10.80   16.19       0
+   536870912     134217728     float     sum      -1  47970.1   11.19   16.79       0  49195.5   10.91   16.37       0
+  1073741824     268435456     float     sum      -1  97476.8   11.02   16.52       0  94694.6   11.34   17.01       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 17.9023 
+#
+# Collective test concluded: all_reduce_perf
+#
+
+=== alltoall_perf
+# nccl-tests version 2.21.1 (afd59ab) nccl-headers=22803 nccl-library=22803
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 1073741824 step: 2(factor) warmup iters: 1 iters: 50 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid      1 on 9fa61c3793cc device  0 [0000:0b:00] NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+#  Rank  1 Group  0 Pid      1 on 9fa61c3793cc device  1 [0000:71:00] NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+#  Rank  2 Group  0 Pid      1 on 9fa61c3793cc device  2 [0000:cd:00] NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+#  Rank  3 Group  0 Pid      1 on 9fa61c3793cc device  3 [0000:dd:00] NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition
+NCCL version 2.28.3+cuda13.0
+#
+#                                                              out-of-place                       in-place
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)        
+     1048576         65536     float    none      -1    52.05   20.15   15.11       0    52.47   19.98   14.99    N/A
+     2097152        131072     float    none      -1    88.98   23.57   17.68       0    89.07   23.54   17.66    N/A
+     4194304        262144     float    none      -1   163.07   25.72   19.29       0   163.36   25.68   19.26    N/A
+     8388608        524288     float    none      -1   308.48   27.19   20.40       0   309.78   27.08   20.31    N/A
+    16777216       1048576     float    none      -1   623.96   26.89   20.17       0   630.08   26.63   19.97    N/A
+    33554432       2097152     float    none      -1  1313.51   25.55   19.16       0  1332.98   25.17   18.88    N/A
+    67108864       4194304     float    none      -1  2773.12   24.20   18.15       0  2714.89   24.72   18.54    N/A
+   134217728       8388608     float    none      -1  5606.78   23.94   17.95       0  5484.68   24.47   18.35    N/A
+   268435456      16777216     float    none      -1  11404.3   23.54   17.65       0  11024.0   24.35   18.26    N/A
+   536870912      33554432     float    none      -1  22362.3   24.01   18.01       0  21425.3   25.06   18.79    N/A
+  1073741824      67108864     float    none      -1  44370.0   24.20   18.15       0  42943.1   25.00   18.75    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 18.4305 
+#
+# Collective test concluded: alltoall_perf
+#
+

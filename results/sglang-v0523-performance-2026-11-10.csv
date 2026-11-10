@@ -1,0 +1,17 @@
+Test,Engine,Engine cap,Concurrency,Input tokens,Output tokens,Requests OK,Requests total,Prefill tok/s,Median TTFT s,P99 TTFT s,Per-stream decode tok/s,Total decode tok/s,Peak output tok/s,DSpark accept length
+Steady decode sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,1,1024,2048,4,4,,0.138,0.156,224.7,215.0,281.0,4.38
+Steady decode sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,2,1024,2048,8,8,,0.16,0.174,232.6,389.6,522.0,4.76
+Steady decode sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,4,1024,2048,16,16,,0.177,0.236,153.6,543.1,730.0,4.67
+Steady decode sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,8,1024,2048,32,32,,0.197,0.708,121.7,826.9,1212.0,4.7
+Steady decode sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,12,1024,2048,48,48,,0.221,0.717,91.5,957.7,1331.0,4.68
+Steady decode sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,16,1024,2048,64,64,,0.226,0.726,86.7,1147.1,1472.0,4.68
+Agent-shaped sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,1,32000,512,4,4,,0.355,0.368,224.2,190.4,,4.41
+Agent-shaped sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,2,32000,512,8,8,,0.326,0.397,179.9,328.9,,4.72
+Agent-shaped sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,4,32000,512,16,16,,0.419,0.637,140.6,493.3,,4.64
+Agent-shaped sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,8,32000,512,32,32,,0.476,1.357,105.2,698.8,,4.69
+Agent-shaped sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,12,32000,512,48,48,,0.471,1.536,70.0,710.3,,4.66
+Agent-shaped sweep,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,16,32000,512,64,64,,0.4,2.031,64.0,901.1,,4.67
+Cold 32K prefill,SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,1,32768,16,3,3,13728.3,3.185,,,,,
+Steady decode repeat 1 (variance check),SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,1,1024,2048,4,4,,,,275.5,224.13,,4.68
+Steady decode repeat 2 (variance check),SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,1,1024,2048,4,4,,,,225.7,213.77,,4.68
+Steady decode repeat 3 (variance check),SGLang v0.5.23 + Sybil SM120 port + HiCache + Engram THP,16,1,1024,2048,4,4,,,,268.8,240.4,,4.68

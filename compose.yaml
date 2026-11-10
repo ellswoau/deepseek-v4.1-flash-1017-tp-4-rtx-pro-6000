@@ -1,0 +1,40 @@
+# DeepSeek-V4.1-Flash on 4 x RTX PRO 6000 Blackwell (SM120) with SGLang v0.5.23.
+#   MODEL_DIRECTORY=/path/to/DeepSeek-V4.1-Flash-1017 docker compose up --build -d
+# The API binds to 127.0.0.1 by default. To pin specific GPUs, add compose.pin-gpus.example.yaml.
+services:
+  deepseek:
+    build: .
+    image: deepseek-v41-sglang-v0523-sm120:local
+    gpus:
+      - driver: nvidia
+        count: 4
+        capabilities: [gpu]
+    ipc: host
+    init: true
+    stop_grace_period: 60s
+    shm_size: 32gb
+    cap_add: [IPC_LOCK]
+    ulimits:
+      memlock: {soft: -1, hard: -1}
+      stack: {soft: 67108864, hard: 67108864}
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:8010:8010"
+    volumes:
+      - "${MODEL_DIRECTORY:?set MODEL_DIRECTORY to the DeepSeek-V4.1-Flash-1017 checkpoint}:/models/DeepSeek-V4.1-Flash:ro"
+      - "${STATE_DIRECTORY:-./state}:/state"
+      - kernel-cache:/root/.cache
+    environment:
+      SGLANG_ENABLE_DSV41_ENGRAM_HOST_TABLE: "1"
+      SGLANG_DSV41_ENGRAM_HOST_TABLE_LAYOUT: shared
+      SGLANG_DSA_MQA_LOGITS_FREE_MEM_FRACTION: "0.2"
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+      MAX_RUNNING_REQUESTS: "${MAX_RUNNING_REQUESTS:-16}"
+      CONTEXT_LENGTH: "${CONTEXT_LENGTH:-409600}"
+      MEMORY_FRACTION: "${MEMORY_FRACTION:-0.92}"
+      MAX_TOTAL_TOKENS: "${MAX_TOTAL_TOKENS:-4200000}"
+      CHUNKED_PREFILL_SIZE: "${CHUNKED_PREFILL_SIZE:-2048}"
+      HICACHE_RATIO: "${HICACHE_RATIO:-4}"
+      API_KEY: "${API_KEY:-}"
+    restart: unless-stopped
+volumes:
+  kernel-cache:

@@ -1,0 +1,155 @@
+################ steady decode C=1 (random 1024 in / 2048 out, ignore_eos)
+Successful requests:                     4         
+Benchmark duration (s):                  42.82     
+Output token throughput (tok/s):         191.33    
+Peak output token throughput (tok/s):    242.00    
+Accept length:                           4.85      
+Mean TTFT (ms):                          175.81    
+Median TTFT (ms):                        188.53    
+Median TPOT (ms):                        4.67      
+Median ITL (ms):                         4.16      
+################ agent-like C=1 (shared ~30K system prompt + 2K question, 512 out)
+Successful requests:                     4         
+Benchmark duration (s):                  12.76     
+Output token throughput (tok/s):         160.46    
+Accept length:                           4.75      
+Mean TTFT (ms):                          427.42    
+Median TTFT (ms):                        484.45    
+P99 TTFT (ms):                           501.69    
+Median TPOT (ms):                        5.31      
+################ steady decode C=2 (random 1024 in / 2048 out, ignore_eos)
+Successful requests:                     8         
+Benchmark duration (s):                  49.05     
+Output token throughput (tok/s):         334.01    
+Peak output token throughput (tok/s):    459.00    
+Accept length:                           4.87      
+Mean TTFT (ms):                          213.46    
+Median TTFT (ms):                        215.52    
+Median TPOT (ms):                        4.91      
+Median ITL (ms):                         4.44      
+################ agent-like C=2 (shared ~30K system prompt + 2K question, 512 out)
+Successful requests:                     8         
+Benchmark duration (s):                  13.43     
+Output token throughput (tok/s):         304.89    
+Accept length:                           4.83      
+Mean TTFT (ms):                          495.36    
+Median TTFT (ms):                        446.15    
+P99 TTFT (ms):                           863.60    
+Median TPOT (ms):                        5.51      
+################ steady decode C=4 (random 1024 in / 2048 out, ignore_eos)
+Successful requests:                     16        
+Benchmark duration (s):                  59.45     
+Output token throughput (tok/s):         551.22    
+Peak output token throughput (tok/s):    689.00    
+Accept length:                           4.92      
+Mean TTFT (ms):                          242.23    
+Median TTFT (ms):                        231.77    
+Median TPOT (ms):                        6.60      
+Median ITL (ms):                         5.54      
+################ agent-like C=4 (shared ~30K system prompt + 2K question, 512 out)
+Successful requests:                     16        
+Benchmark duration (s):                  18.73     
+Output token throughput (tok/s):         437.47    
+Accept length:                           4.83      
+Mean TTFT (ms):                          522.55    
+Median TTFT (ms):                        520.83    
+P99 TTFT (ms):                           796.27    
+Median TPOT (ms):                        7.34      
+################ steady decode C=8 (random 1024 in / 2048 out, ignore_eos)
+Successful requests:                     32        
+Benchmark duration (s):                  93.19     
+Output token throughput (tok/s):         703.25    
+Peak output token throughput (tok/s):    990.00    
+Accept length:                           4.74      
+Mean TTFT (ms):                          339.34    
+Median TTFT (ms):                        251.98    
+Median TPOT (ms):                        9.86      
+Median ITL (ms):                         7.99      
+################ agent-like C=8 (shared ~30K system prompt + 2K question, 512 out)
+Successful requests:                     32        
+Benchmark duration (s):                  23.76     
+Output token throughput (tok/s):         689.44    
+Accept length:                           4.72      
+Mean TTFT (ms):                          771.61    
+Median TTFT (ms):                        688.49    
+P99 TTFT (ms):                           1600.52   
+Median TPOT (ms):                        9.97      
+################ steady decode C=12 (random 1024 in / 2048 out, ignore_eos)
+Successful requests:                     48        
+Benchmark duration (s):                  114.59    
+Output token throughput (tok/s):         857.88    
+Peak output token throughput (tok/s):    1202.00   
+Accept length:                           4.70      
+Mean TTFT (ms):                          363.66    
+Median TTFT (ms):                        280.14    
+Median TPOT (ms):                        11.74     
+Median ITL (ms):                         9.88      
+################ agent-like C=12 (shared ~30K system prompt + 2K question, 512 out)
+Successful requests:                     48        
+Benchmark duration (s):                  30.87     
+Output token throughput (tok/s):         796.04    
+Accept length:                           4.70      
+Mean TTFT (ms):                          816.96    
+Median TTFT (ms):                        580.65    
+P99 TTFT (ms):                           1961.03   
+Median TPOT (ms):                        12.98     
+################ steady decode C=16 (random 1024 in / 2048 out, ignore_eos)
+Successful requests:                     64        
+Benchmark duration (s):                  129.24    
+Output token throughput (tok/s):         1014.18   
+Peak output token throughput (tok/s):    1391.00   
+Accept length:                           4.67      
+Mean TTFT (ms):                          405.60    
+Median TTFT (ms):                        288.77    
+Median TPOT (ms):                        13.37     
+Median ITL (ms):                         10.79     
+################ agent-like C=16 (shared ~30K system prompt + 2K question, 512 out)
+Successful requests:                     64        
+Benchmark duration (s):                  42.09     
+Output token throughput (tok/s):         778.46    
+Accept length:                           4.68      
+Mean TTFT (ms):                          1325.52   
+Median TTFT (ms):                        1111.87   
+P99 TTFT (ms):                           2690.39   
+Median TPOT (ms):                        17.17     
+################ steady decode C=24 (random 1024 in / 2048 out, ignore_eos)
+Successful requests:                     96        
+Benchmark duration (s):                  163.67    
+Output token throughput (tok/s):         1201.28   
+Peak output token throughput (tok/s):    1725.00   
+Accept length:                           4.71      
+Mean TTFT (ms):                          841.85    
+Median TTFT (ms):                        343.05    
+Median TPOT (ms):                        17.60     
+Median ITL (ms):                         13.49     
+################ agent-like C=24 (shared ~30K system prompt + 2K question, 512 out)
+Successful requests:                     96        
+Benchmark duration (s):                  61.45     
+Output token throughput (tok/s):         799.91    
+Accept length:                           4.71      
+Mean TTFT (ms):                          2156.34   
+Median TTFT (ms):                        1072.71   
+P99 TTFT (ms):                           7305.03   
+Median TPOT (ms):                        25.94     
+################ steady decode C=32 (random 1024 in / 2048 out, ignore_eos)
+Successful requests:                     128       
+Benchmark duration (s):                  190.10    
+Output token throughput (tok/s):         1378.96   
+Peak output token throughput (tok/s):    1735.00   
+Accept length:                           4.74      
+Mean TTFT (ms):                          995.36    
+Median TTFT (ms):                        362.18    
+Median TPOT (ms):                        20.19     
+Median ITL (ms):                         15.83     
+################ agent-like C=32 (shared ~30K system prompt + 2K question, 512 out)
+Successful requests:                     128       
+Benchmark duration (s):                  79.63     
+Output token throughput (tok/s):         823.05    
+Accept length:                           4.73      
+Mean TTFT (ms):                          3017.15   
+Median TTFT (ms):                        1337.17   
+P99 TTFT (ms):                           9874.94   
+Median TPOT (ms):                        33.54     
+SWEEP_DONE
+
+[exited with code 0]
