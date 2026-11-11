@@ -82,9 +82,10 @@ On hosts with more than four GPUs, pin the engine with [compose.pin-gpus.example
 | `DS41_DSV4_SWA_HOST_MULT` | 11 | SWA host pool multiplier (fix 4). 4,092 pages, about 26 GB per GPU. Set it to 1 to disable. |
 | | | **With ≥ 768 GB host RAM**, set `HICACHE_RATIO=4` (keep ×11): 8,184 SWA pages, about 80 GB of pools per GPU. Idle 57K conversations then reload from host in 0.17 s after 4.7M tokens of other traffic (results §6). |
 | `PREFILL_DECODE_INTERVAL` | 8 | Decode rounds between prefill chunks of a long prompt, so streaming answers keep flowing during a big cold load. Costs ~19% TTFT for that load; 0 = maximum prefill throughput (results §9). |
+| `DSPARK_BLOCK_SIZE` | 5 | DSpark draft tokens per step (verify window = block + 1). 5 is the size the bundled draft head was trained with; 3, 4 and 6 were within noise or slower (results §12). |
 | `EXTRA_ARGS` | — | Appended to `sglang.launch_server`. |
 
-Fixed: TP4/EP4, `dsv4` attention, `flashinfer_mxfp4` MoE, FP8 KV, DSpark block 5, `--min-free-slots-delay 1`, decoder SWA bounded replay, `deepseekv41` tool parser, `deepseek-v41` reasoning parser, write-through HiCache, `--enable-metrics` (Prometheus at `/metrics`).
+Fixed: TP4/EP4, `dsv4` attention, `flashinfer_mxfp4` MoE, FP8 KV, `--min-free-slots-delay 1`, decoder SWA bounded replay, `deepseekv41` tool parser, `deepseek-v41` reasoning parser, write-through HiCache, `--enable-metrics` (Prometheus at `/metrics`).
 
 ## 6. Hardware notes from this machine
 

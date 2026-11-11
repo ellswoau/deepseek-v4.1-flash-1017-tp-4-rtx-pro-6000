@@ -27,7 +27,7 @@ exec python3 -m sglang.launch_server \
   --chunked-prefill-size "${CHUNKED_PREFILL_SIZE:-4096}" \
   --min-free-slots-delay 1 --random-seed 0 \
   --prefill-decode-interval "${PREFILL_DECODE_INTERVAL:-8}" \
-  --speculative-algorithm DSPARK --speculative-dspark-block-size 5 \
+  --speculative-algorithm DSPARK --speculative-dspark-block-size "${DSPARK_BLOCK_SIZE:-5}" \
   --enable-decoder-swa-bounded-replay \
   --tool-call-parser deepseekv41 --reasoning-parser deepseek-v41 \
   --enable-hicache --hicache-ratio "${HICACHE_RATIO:-2}" --hicache-write-policy write_through \

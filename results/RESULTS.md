@@ -187,3 +187,15 @@ Setup: tuned FP8 image, interval 8, 1,048,576 context (to stress memory), restar
 | 8192 | 4.96 GB | 99.0 s | 13.3K | 11.4K | 10.9K / 7.0 s | 48 tok/s (~24%) | 21.7 s | 4/4 |
 
 No OOM or engine restart at any size. Single-stream decode is unchanged (~290 tok/s). Each chunk occupies the GPUs for longer, so interleaved decode rounds come less often; the interval cannot compensate because it only adds decode rounds between chunks. New requests still wait for the whole in-progress prefill at every size. The default here is **4096**: −12% cold 1M TTFT and about +30% concurrent prefill, while streams in flight keep about two thirds of their speed.
+
+## 12. DSpark block size (`--speculative-dspark-block-size`)
+Setup: production config (409,600 context, chunk 4096, interval 8, tuned FP8), restart per size. `tests/dspark_bench.py`: 8 real-text prompt types (prose, code, JSON, summary, SQL, email, bash, analysis), model default sampling, up to 1,024 output tokens, 2×C requests (min 4) per level. Acceptance length is the request-weighted mean of the engine's decode log lines for the same window. Raw output: `raw/dspark-block/`. The bundled draft head declares `dspark_block_size: 5`.
+
+| Block (verify window) | GPU free | C=1 per stream | C=4 per stream / total | C=8 per stream / total | C=16 per stream / total | Accept length (C=1 / C=16) |
+|---:|---:|---:|---:|---:|---:|---:|
+| 3 (4) | 9.85 GB | 195 | 131 / 371 | 96 / 564 | 64 / 804 | 2.66 / 2.72 |
+| 4 (5) | 7.25 GB | 233 | 134 / 360 | 95 / 539 | 70 / 803 | 3.06 / 3.02 |
+| **5 (6)** | 7.01 GB | 233 | 132 / 353 | 95 / 556 | 69 / 772 | 3.00 / 3.15 |
+| 6 (7) | 6.75 GB | 238 | 127 / 349 | 93 / 504 | 73 / 783 | 3.26 / 3.29 |
+
+Tool-call smoke test passed at every size. Block 3 loses about 17% single-stream speed. Blocks 4, 5 and 6 are within about ±5% of each other at every concurrency, which is inside the run-to-run spread of a single pass with sampling on, so the checkpoint default of 5 is kept. Speed depends far more on content than on block size: at C=1, prose ran at about 115–135 tok/s while code, JSON and summaries ran at 225–275. The ragged-verify scheduler with a profiled SPS cost table (`--speculative-dspark-sps-table-path`, `SGLANG_RAGGED_VERIFY_MODE`) was not tested; without a table it verifies every draft token.

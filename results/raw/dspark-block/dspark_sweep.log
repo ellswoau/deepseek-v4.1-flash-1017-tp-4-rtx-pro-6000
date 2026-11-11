@@ -1,0 +1,41 @@
+
+################ DSpark block size 5  08:55:53
+ Container v0523-ds41b-1  Running
+
+  C= 1  per-stream  233.4 (min 114.7)  total   175.4 tok/s  TTFT 0.13s  accept len 3.0
+  C= 4  per-stream  132.2 (min 69.0)  total   352.8 tok/s  TTFT 0.15s  accept len 3.13
+  C= 8  per-stream   95.1 (min 48.5)  total   555.8 tok/s  TTFT 0.31s  accept len 3.22
+  C=16  per-stream   68.6 (min 36.0)  total   772.2 tok/s  TTFT 0.69s  accept len 3.15
+  smoke tool-call PASS count: 8
+
+################ DSpark block size 3  08:58:49
+ Container v0523-ds41b-1  Started
+max_total_num_tokens=4199936 chunked_prefill_size=4096 available_gpu_mem=9.85 'speculative_num_draft_tokens': 4 'speculative_dspark_block_size': 3 
+  C= 1  per-stream  194.9 (min 131.1)  total   166.3 tok/s  TTFT 0.15s  accept len 2.66
+  C= 4  per-stream  130.9 (min 78.8)  total   370.7 tok/s  TTFT 0.27s  accept len 2.7
+  C= 8  per-stream   95.5 (min 58.6)  total   563.5 tok/s  TTFT 0.27s  accept len 2.76
+  C=16  per-stream   64.4 (min 40.8)  total   803.7 tok/s  TTFT 0.52s  accept len 2.72
+  smoke tool-call PASS count: 8
+
+################ DSpark block size 4  09:04:19
+ Container v0523-ds41b-1  Started
+max_total_num_tokens=4199936 chunked_prefill_size=4096 available_gpu_mem=7.25 'speculative_num_draft_tokens': 5 'speculative_dspark_block_size': 4 
+  C= 1  per-stream  232.9 (min 133.2)  total   186.7 tok/s  TTFT 0.18s  accept len 3.06
+  C= 4  per-stream  134.0 (min 72.6)  total   359.6 tok/s  TTFT 0.17s  accept len 2.95
+  C= 8  per-stream   95.4 (min 53.8)  total   539.0 tok/s  TTFT 0.17s  accept len 2.97
+  C=16  per-stream   69.9 (min 38.2)  total   802.9 tok/s  TTFT 0.52s  accept len 3.02
+  smoke tool-call PASS count: 8
+
+################ DSpark block size 6  09:09:46
+ Container v0523-ds41b-1  Started
+max_total_num_tokens=4199936 chunked_prefill_size=4096 available_gpu_mem=6.75 'speculative_num_draft_tokens': 7 'speculative_dspark_block_size': 6 
+  C= 1  per-stream  237.9 (min 127.9)  total   187.0 tok/s  TTFT 0.16s  accept len 3.26
+  C= 4  per-stream  127.4 (min 61.6)  total   348.9 tok/s  TTFT 0.18s  accept len 3.22
+  C= 8  per-stream   92.6 (min 46.1)  total   504.1 tok/s  TTFT 0.16s  accept len 3.31
+  C=16  per-stream   72.9 (min 36.3)  total   783.2 tok/s  TTFT 0.55s  accept len 3.29
+  smoke tool-call PASS count: 8
+
+################ restoring production: block 5  09:15:19
+ Container v0523-ds41b-1  Started
+max_total_num_tokens=4199936 chunked_prefill_size=4096 available_gpu_mem=7.01 'speculative_num_draft_tokens': 6 'speculative_dspark_block_size': 5 
+DSPARK_DONE 09:18:06
