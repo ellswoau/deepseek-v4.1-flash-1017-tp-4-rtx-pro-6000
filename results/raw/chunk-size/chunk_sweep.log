@@ -1,0 +1,38 @@
+
+################ chunk=2048  07:04:20
+ Container v0523-ds41b-1  Started
+max_total_num_tokens=4199936 chunked_prefill_size=2048 context_len=1048576 available_gpu_mem=5.61 GB
+{"label": "chunk=2048", "target": 1000000, "prompt_tokens": 1000185, "ttft_s": 128.1, "prefill_tok_s": 7811, "needles": "4/4"}
+engine after 1M: running restarts=0; OOM lines: 0
+{"label": "chunk=2048", "prompt_tokens": 250181, "ttft_s": 29.21, "long_decode_tok_s": 123.7, "needles": "4/4", "bg_tok_s_baseline": 362.1, "bg_tok_s_during_prefill": 40.7, "bg_tok_s_after": 357.2, "bg_retained_during_prefill_pct": 11.2, "inflight_tok_s_during_prefill": 211.5, "inflight_tok_s_baseline": 203.3, "new_bg_requests_during_prefill": 8, "new_bg_ttft_median_s": 27.5, "new_bg_ttft_max_s": 28.2, "baseline_bg_ttft_median_s": 1.1}
+  File "<string>", line 3
+    s=json.loads(l); print(f"  matrix in={s[\"input_tokens\"]} C={s[\"concurrency\"]} prefill={s[\"effective_prefill_tps\"]:.0f} ttft={s[\"median_ttft_s\"]:.1f}s decode/stream={(s[\"median_decode_tps\"] or 0):.0f} ok={s[\"successes\"]}")
+                                             ^
+SyntaxError: unexpected character after line continuation character
+
+################ chunk=4096  07:11:49
+ Container v0523-ds41b-1  Started
+max_total_num_tokens=4199936 chunked_prefill_size=4096 context_len=1048576 available_gpu_mem=5.33 GB
+{"label": "chunk=4096", "target": 1000000, "prompt_tokens": 1000186, "ttft_s": 113.1, "prefill_tok_s": 8840, "needles": "4/4"}
+engine after 1M: running restarts=0; OOM lines: 0
+{"label": "chunk=4096", "prompt_tokens": 250151, "ttft_s": 26.44, "long_decode_tok_s": 77.2, "needles": "4/4", "bg_tok_s_baseline": 396.1, "bg_tok_s_during_prefill": 50.3, "bg_tok_s_after": 376.2, "bg_retained_during_prefill_pct": 12.7, "inflight_tok_s_during_prefill": 135.6, "inflight_tok_s_baseline": 200.8, "new_bg_requests_during_prefill": 8, "new_bg_ttft_median_s": 23.7, "new_bg_ttft_max_s": 24.6, "baseline_bg_ttft_median_s": 0.4}
+  File "<string>", line 3
+    s=json.loads(l); print(f"  matrix in={s[\"input_tokens\"]} C={s[\"concurrency\"]} prefill={s[\"effective_prefill_tps\"]:.0f} ttft={s[\"median_ttft_s\"]:.1f}s decode/stream={(s[\"median_decode_tps\"] or 0):.0f} ok={s[\"successes\"]}")
+                                             ^
+SyntaxError: unexpected character after line continuation character
+
+################ chunk=8192  07:18:57
+ Container v0523-ds41b-1  Started
+max_total_num_tokens=4199936 chunked_prefill_size=8192 context_len=1048576 available_gpu_mem=4.96 GB
+{"label": "chunk=8192", "target": 1000000, "prompt_tokens": 1000187, "ttft_s": 99.0, "prefill_tok_s": 10105, "needles": "4/4"}
+engine after 1M: running restarts=0; OOM lines: 0
+{"label": "chunk=8192", "prompt_tokens": 250188, "ttft_s": 21.92, "long_decode_tok_s": 45.1, "needles": "4/4", "bg_tok_s_baseline": 400.8, "bg_tok_s_during_prefill": 9.1, "bg_tok_s_after": 388.4, "bg_retained_during_prefill_pct": 2.3, "inflight_tok_s_during_prefill": 48.0, "inflight_tok_s_baseline": 202.5, "new_bg_requests_during_prefill": 7, "new_bg_ttft_median_s": 21.7, "new_bg_ttft_max_s": 22.5, "baseline_bg_ttft_median_s": 0.4}
+  File "<string>", line 3
+    s=json.loads(l); print(f"  matrix in={s[\"input_tokens\"]} C={s[\"concurrency\"]} prefill={s[\"effective_prefill_tps\"]:.0f} ttft={s[\"median_ttft_s\"]:.1f}s decode/stream={(s[\"median_decode_tps\"] or 0):.0f} ok={s[\"successes\"]}")
+                                             ^
+SyntaxError: unexpected character after line continuation character
+
+################ restoring production: ctx 409600, chunk 2048, interval 8
+ Container v0523-ds41b-1  Started
+max_total_num_tokens=4199936 chunked_prefill_size=2048 context_len=409600 available_gpu_mem=7.09 GB
+CHUNK_DONE 07:28:29

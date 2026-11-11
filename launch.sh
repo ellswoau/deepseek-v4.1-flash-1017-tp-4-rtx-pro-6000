@@ -24,7 +24,7 @@ exec python3 -m sglang.launch_server \
   --max-total-tokens "${MAX_TOTAL_TOKENS:-4200000}" \
   --max-running-requests "${MAX_RUNNING_REQUESTS:-16}" \
   --cuda-graph-max-bs-decode "${MAX_RUNNING_REQUESTS:-16}" \
-  --chunked-prefill-size "${CHUNKED_PREFILL_SIZE:-2048}" \
+  --chunked-prefill-size "${CHUNKED_PREFILL_SIZE:-4096}" \
   --min-free-slots-delay 1 --random-seed 0 \
   --prefill-decode-interval "${PREFILL_DECODE_INTERVAL:-8}" \
   --speculative-algorithm DSPARK --speculative-dspark-block-size 5 \

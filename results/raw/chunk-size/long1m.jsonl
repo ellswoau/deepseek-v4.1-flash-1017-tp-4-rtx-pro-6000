@@ -1,0 +1,3 @@
+{"label": "chunk=2048", "target": 1000000, "prompt_tokens": 1000185, "ttft_s": 128.1, "prefill_tok_s": 7811, "needles": "4/4"}
+{"label": "chunk=4096", "target": 1000000, "prompt_tokens": 1000186, "ttft_s": 113.1, "prefill_tok_s": 8840, "needles": "4/4"}
+{"label": "chunk=8192", "target": 1000000, "prompt_tokens": 1000187, "ttft_s": 99.0, "prefill_tok_s": 10105, "needles": "4/4"}

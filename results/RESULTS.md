@@ -176,3 +176,14 @@ End to end with Sybil's `matrix.py` (1,024 output, 409,600 context, C16 cap). Fu
 | Cold prefill, C=1, 8K / 32K | 7,953 / 8,000 | 9,308 / 9,322 | 11,849 / 11,934 | 10,833 / 10,971 |
 | Prefill, C=4, 8K–32K | ~8,030 | ~5,800 | ~12,000 | ~6,900 |
 | Cold 32K TTFT, C=1 | 4.1 s | — | 2.7 s | 3.0 s |
+
+## 11. Prefill chunk size (`--chunked-prefill-size`)
+Setup: tuned FP8 image, interval 8, 1,048,576 context (to stress memory), restart per size. Cold ~1M prompt with 4 needles; the 250K background-streaming test from §9; Sybil's `matrix.py` at 8K/32K, C=1/4, 1,024 output. Raw output: `raw/chunk-size/`.
+
+| Chunk | GPU free after load | Cold 1M TTFT | 32K C=1 prefill | 8K C=4 prefill | 32K C=4 prefill / TTFT | In-flight streams during 250K prefill (baseline ~200 tok/s) | New-request wait | 1M needles |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| 2048 | 5.61 GB | 128.1 s | 10.9K | 6.9K | 6.6K / 11.1 s | 212 tok/s (100%) | 27.5 s | 4/4 |
+| **4096** | 5.33 GB | 113.1 s | 12.2K | 9.3K | 8.6K / 8.5 s | 136 tok/s (~68%) | 23.7 s | 4/4 |
+| 8192 | 4.96 GB | 99.0 s | 13.3K | 11.4K | 10.9K / 7.0 s | 48 tok/s (~24%) | 21.7 s | 4/4 |
+
+No OOM or engine restart at any size. Single-stream decode is unchanged (~290 tok/s). Each chunk occupies the GPUs for longer, so interleaved decode rounds come less often; the interval cannot compensate because it only adds decode rounds between chunks. New requests still wait for the whole in-progress prefill at every size. The default here is **4096**: −12% cold 1M TTFT and about +30% concurrent prefill, while streams in flight keep about two thirds of their speed.

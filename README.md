@@ -77,7 +77,7 @@ On hosts with more than four GPUs, pin the engine with [compose.pin-gpus.example
 | `CONTEXT_LENGTH` | 409600 | The model limit is 1,048,576. 1M acceptance is pending. |
 | `MEMORY_FRACTION` | 0.92 | About 7 GB free per GPU after graphs at C16. |
 | `MAX_TOTAL_TOKENS` | 4200000 | FP8 KV pool, 4,199,936 tokens allocated. |
-| `CHUNKED_PREFILL_SIZE` | 2048 | |
+| `CHUNKED_PREFILL_SIZE` | 4096 | Tokens per prefill chunk. Larger = faster cold prefill but in-flight streams slow down more during a big load; 2048 keeps streaming at full speed, 8192 is for batch use (results §11). |
 | `HICACHE_RATIO` | 2 | Main-KV host pool = 2 × GPU pool (8.4M tokens, about 14 GB per GPU). |
 | `DS41_DSV4_SWA_HOST_MULT` | 11 | SWA host pool multiplier (fix 4). 4,092 pages, about 26 GB per GPU. Set it to 1 to disable. |
 | | | **With ≥ 768 GB host RAM**, set `HICACHE_RATIO=4` (keep ×11): 8,184 SWA pages, about 80 GB of pools per GPU. Idle 57K conversations then reload from host in 0.17 s after 4.7M tokens of other traffic (results §6). |
