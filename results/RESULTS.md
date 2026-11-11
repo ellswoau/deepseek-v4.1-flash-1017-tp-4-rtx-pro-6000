@@ -201,7 +201,7 @@ Setup: production config (409,600 context, chunk 4096, interval 8, tuned FP8), r
 Tool-call smoke test passed at every size. Block 3 loses about 17% single-stream speed. Blocks 4, 5 and 6 are within about ±5% of each other at every concurrency, which is inside the run-to-run spread of a single pass with sampling on, so the checkpoint default of 5 is kept. Speed depends far more on content than on block size: at C=1, prose ran at about 115–135 tok/s while code, JSON and summaries ran at 225–275. The ragged-verify scheduler with a profiled SPS cost table (`--speculative-dspark-sps-table-path`, `SGLANG_RAGGED_VERIFY_MODE`) was not tested; without a table it verifies every draft token.
 
 ## 13. Final production config, C=1–16 sweep
-Same workloads as §2 (`tests/p8_sweep.sh`): tuned FP8, chunk 4096, interval 8, DSpark block 5, HiCache ratio 4 + SWA ×11, 409,600 context. All 197 requests succeeded. Full table against the Sybil build, the first v0.5.23 run and the 768 GB run: [final-config-comparison-2026-11-11.csv](final-config-comparison-2026-11-11.csv). Raw: `raw/sweep_final.log`.
+Same workloads as §2 (`tests/p8_sweep.sh`): tuned FP8, chunk 4096, interval 8, DSpark block 5, HiCache ratio 4 + SWA ×11, 409,600 context. All 347 requests succeeded. Full table against the Sybil build, the first v0.5.23 run and the 768 GB run: [final-config-comparison-2026-11-11.csv](final-config-comparison-2026-11-11.csv). Raw: `raw/sweep_final.log`.
 
 | | Sybil build | Final | Change |
 |---|---:|---:|---:|
