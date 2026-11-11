@@ -79,6 +79,7 @@ On hosts with more than four GPUs, pin the engine with [compose.pin-gpus.example
 | `CHUNKED_PREFILL_SIZE` | 2048 | |
 | `HICACHE_RATIO` | 2 | Main-KV host pool = 2 × GPU pool (8.4M tokens, about 14 GB per GPU). |
 | `DS41_DSV4_SWA_HOST_MULT` | 11 | SWA host pool multiplier (fix 4). 4,092 pages, about 26 GB per GPU. Set it to 1 to disable. |
+| | | **With ≥ 768 GB host RAM**, set `HICACHE_RATIO=4` (keep ×11): 8,184 SWA pages, about 80 GB of pools per GPU. Idle 57K conversations then reload from host in 0.17 s after 4.7M tokens of other traffic (results §6). |
 | `EXTRA_ARGS` | — | Appended to `sglang.launch_server`. |
 
 Fixed: TP4/EP4, `dsv4` attention, `flashinfer_mxfp4` MoE, FP8 KV, DSpark block 5, `--min-free-slots-delay 1`, decoder SWA bounded replay, `deepseekv41` tool parser, `deepseek-v41` reasoning parser, write-through HiCache, `--enable-metrics` (Prometheus at `/metrics`).

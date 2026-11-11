@@ -101,10 +101,11 @@ A stepwise test showed that a 48K conversation stays reusable through 850K token
 | stock: ratio 4, 744 SWA pages | 32 GB | 0.26–0.29 s | lost by 2.35M (4.96 s) | cold (5.95 s) |
 | **ratio 2 + SWA ×11 (4,092 pages)** (default) | **40 GB** | 0.27–0.29 s | **kept: 0.15 s, 48,128 tokens cached** | cold (5.96 s) |
 | ratio 4 + SWA ×5.5 (4,092 pages) | 54 GB | 0.26–0.28 s | — | cold (5.93 s) |
+| **ratio 4 + SWA ×11 (8,184 pages)**, needs about 768 GB host RAM | **80 GB** | 0.27–0.29 s | — | **0.17 s** (cold 6.03 s): 57,344 tokens reloaded from host in 0.03 s |
 
 Cache-mode HiCache backs up about 0.45 SWA tokens per token of traffic, one window per prefill chunk. For an *idle* conversation to survive F tokens of other traffic, the SWA host tier needs about 0.45 × F tokens, at about 25 KB per token per GPU.
 
-For F = 4.7M that is about 53 GB per GPU of SWA alone, about 250 GB of host pools in total, which does not fit beside the 189 GiB Engram tables on a 512 GB host. *Active* conversations survive anyway, because each resend refreshes their place in the cache.
+For F = 4.7M that is about 53 GB per GPU of SWA alone. **On a 768 GB host (ratio 4 + ×11, about 320 GB of pinned pools beside the 189 GiB Engram tables, about 226 GB still free), the idle conversation was reloaded from host RAM in 0.17 s instead of re-prefilled in 6 s.** On a 512 GB host, use ratio 2 + ×11. *Active* conversations survive anyway, because each resend refreshes their place in the cache.
 
 Note: every v0.5.23 start logs `Metadata glue-graph capture failed ... falling back to eager metadata prep` once per rank, because DSpark draft metadata calls `seq_lens.tolist()` during capture. All v0.5.23 numbers here include that fallback.
 
