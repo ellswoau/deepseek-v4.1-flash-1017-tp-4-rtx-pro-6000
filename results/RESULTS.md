@@ -212,3 +212,48 @@ Same workloads as §2 (`tests/p8_sweep.sh`): tuned FP8, chunk 4096, interval 8, 
 | Cold 32K TTFT (median) | 3.19 s | 2.51 s | −21% |
 
 Against the earlier v0.5.23 runs, agent-shaped TTFT at C≥8 is higher (median 0.48 → 0.60–0.72 s, p99 ~2.0 → 2.0–2.6 s). This is the cost of `--prefill-decode-interval 8`: new 2K–30K prefills wait for decode rounds of the streams already running. Median TTFT stays under a second.
+
+## 14. Context length cost and fix 5 (paged decode indexer on SM120)
+
+**Problem.** At `--context-length 1048576`, agent-shaped throughput (30K shared prompt + 2K question, 512 out) was 15–27% lower than at 409,600, on a freshly restarted engine. Steady decode with 1K contexts and cold prefill were unchanged.
+
+**Cause** (torch profiler, 30 decode steps, same C=8 load; `raw/context-length/prof_kernel_sums_1m_vs_409k.txt`). GEMMs, MoE, all-reduce and the sparse-MLA decode kernel took the same time. About ten indexer ops (slot gather, `masked_fill`, copies, int64 index arithmetic, `_fp4_index_logits_kernel`, `torch.topk`) each took 2.5–2.7× longer, which is the 1,048,576 / 409,600 ratio.
+
+The ratio-4 indexer's `decode_scores()` takes a paged path only when `get_platform().is_sm90`. Every other GPU builds `[bs, lmax]` tensors with `lmax` = the CUDA-graph capture bound (`--context-length` / 4), not the live length. So every decode step of a 30K conversation scored and ranked 262K columns per indexer layer.
+
+**Fix 5** (`adapter/sitecustomize.py`, `DS41_SM120_PAGED_INDEXER=1`) lets SM120 take the paged path. It uses `fp4_index_logits_paged` (Triton) and the top-k v2 JIT kernel, which read device-side lengths.
+
+Kernel check on SM120 (`tests/test_topk_v2_sm120.py`, 262,144 columns):
+- `topk_transform_paged_v2` matches `torch.topk` on every row for bs 1–96 at k = 512 and 2,048, and `amax_topk_blocks` matches as well.
+- It runs 0.005–0.014 ms per call, against 0.07–2.6 ms for the full-width torch path.
+
+Agent-shaped totals, tok/s (`raw/context-length/`, CSV [context-length-fix5-2026-11-11.csv](context-length-fix5-2026-11-11.csv)):
+
+| C | 409,600 | 1M, no fix | **1M + fix 5** |
+|---:|---:|---:|---:|
+| 1 | 260 | 222 | **250** |
+| 4 | 565 | 443 | **593** |
+| 8 | 719 | 538 | **859** |
+| 16 | 959 | 698 | **1,209** |
+
+- **Median TPOT at C=16:** 13.9 / 19.4 / **11.3 ms**.
+- **Profile load** (C=8, 1,024 out): 734 / 561 / **1,069 tok/s**.
+- **GPU memory free after startup:** 7.01 / 5.51 / **7.44 GB**.
+- **Cold 32K prefill:** 2.52–2.55 s in all three.
+
+**Mixed load** (`tests/mixed_long.py`): 8 short streams (~2K prompt, 600 out) while one cached long request decodes.
+
+| | 8 shorts alone | during a 250K decode | during a 1M decode |
+|---|---:|---:|---:|
+| Fix 5 off: short per-stream / long request | 78.6 | 41.8 / 90.5 | 41.8 / 76.1 |
+| Fix 5 on: short per-stream / long request | 77.5 | **59.8 / 119.3** | **45.4 / 83.4** |
+
+**Correctness with fix 5:**
+- Smoke: tools 8/8, thinking, image; the JSON check is unchanged from Phase 4.
+- Phase 7 at 250K / 500K / 750K / 1M: 32/32 needles alone and with 8 background streams.
+  - Cold TTFT 22.0 / 46.7 / 74.0 / 104.1 s.
+  - Decode alone 280 / 190 / 194 / 181 tok/s.
+  - Cached 1M resend 2.74 s, with the new needle found.
+- Growing-context agents (`tests/grow4.py`, 90K → 200K): all codes found, wall time unchanged (88.6 s for 4 agents, 25.3 s for 1).
+
+Default context is now 1,048,576 with fix 5 on.

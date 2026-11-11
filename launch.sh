@@ -19,7 +19,7 @@ exec python3 -m sglang.launch_server \
   --tp-size 4 --ep-size 4 \
   --attention-backend dsv4 --moe-runner-backend flashinfer_mxfp4 \
   --kv-cache-dtype fp8_e4m3 \
-  --context-length "${CONTEXT_LENGTH:-409600}" \
+  --context-length "${CONTEXT_LENGTH:-1048576}" \
   --mem-fraction-static "${MEMORY_FRACTION:-0.92}" \
   --max-total-tokens "${MAX_TOTAL_TOKENS:-4200000}" \
   --max-running-requests "${MAX_RUNNING_REQUESTS:-16}" \

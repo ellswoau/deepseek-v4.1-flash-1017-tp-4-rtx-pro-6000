@@ -1,0 +1,57 @@
+################ grow4 [4x-simultaneous]: 4 agent(s) at once, calls ~90K/120K/150K/200K  16:10:30
+  agent 3 call 1: prompt  90,191  TTFT   7.99s  decode 47.5 tok/s  out 210  total 12.39s  needles 4/4
+  agent 2 call 1: prompt  90,201  TTFT  16.81s  decode 47.3 tok/s  out 230  total 21.65s  needles 4/4
+  agent 1 call 1: prompt  90,182  TTFT  25.79s  decode 55.6 tok/s  out 219  total 29.71s  needles 4/4
+  agent 0 call 1: prompt  90,199  TTFT  34.51s  decode 50.2 tok/s  out 238  total 39.23s  needles 4/4
+  agent 3 call 2: prompt 120,497  TTFT  25.58s  decode 54.3 tok/s  out 235  total 29.89s  needles 5/5
+  agent 2 call 2: prompt 120,540  TTFT  19.91s  decode 52.4 tok/s  out 248  total 24.62s  needles 5/5
+  agent 1 call 2: prompt 120,516  TTFT   15.9s  decode 47.3 tok/s  out 280  total 21.79s  needles 5/5
+  agent 0 call 2: prompt 120,542  TTFT   9.93s  decode 44.3 tok/s  out 266  total 15.9s  needles 5/5
+  agent 3 call 3: prompt 150,876  TTFT  11.15s  decode 54.3 tok/s  out 224  total 15.26s  needles 6/6
+  agent 2 call 3: prompt 150,911  TTFT  10.83s  decode 56.3 tok/s  out 262  total 15.47s  needles 6/6
+  agent 1 call 3: prompt 150,915  TTFT   9.66s  decode 51.5 tok/s  out 282  total 15.11s  needles 6/6
+  agent 0 call 3: prompt 150,919  TTFT   9.59s  decode 46.8 tok/s  out 274  total 15.42s  needles 6/6
+  agent 3 call 4: prompt 201,241  TTFT  13.43s  decode 68.0 tok/s  out 248  total 17.07s  needles 7/7
+  agent 2 call 4: prompt 201,273  TTFT  15.01s  decode 62.7 tok/s  out 275  total 19.39s  needles 7/7
+  agent 1 call 4: prompt 201,313  TTFT  15.79s  decode 54.1 tok/s  out 276  total 20.88s  needles 7/7
+  agent 0 call 4: prompt 201,313  TTFT  17.58s  decode 184.3 tok/s  out 286  total 19.13s  needles 7/7
+  per call (median over agents):
+    call 1: prompt ~90,182  TTFT median 25.79s (min 7.99, max 34.51)  decode median 50.2 tok/s  needles ok 4/4
+    call 2: prompt ~120,540  TTFT median 19.91s (min 9.93, max 25.58)  decode median 52.4 tok/s  needles ok 4/4
+    call 3: prompt ~150,911  TTFT median 10.83s (min 9.59, max 11.15)  decode median 54.3 tok/s  needles ok 4/4
+    call 4: prompt ~201,313  TTFT median 15.79s (min 13.43, max 17.58)  decode median 68.0 tok/s  needles ok 4/4
+  wall time all agents done: 90.7s; all needles ok: True  GROW4_DONE
+################ grow4 [1x-alone-baseline]: 1 agent(s) at once, calls ~90K/120K/150K/200K  16:12:22
+  agent 0 call 1: prompt  90,167  TTFT   7.72s  decode 131.1 tok/s  out 233  total 9.49s  needles 4/4
+  agent 0 call 2: prompt 120,495  TTFT   2.76s  decode 133.6 tok/s  out 206  total 4.3s  needles 1/5
+  agent 0 call 3: prompt 150,835  TTFT   2.82s  decode 141.8 tok/s  out 198  total 4.2s  needles 1/6
+  agent 0 call 4: prompt 201,142  TTFT    4.7s  decode 176.6 tok/s  out 197  total 5.81s  needles 1/7
+  per call (median over agents):
+    call 1: prompt ~90,167  TTFT median 7.72s (min 7.72, max 7.72)  decode median 131.1 tok/s  needles ok 1/1
+    call 2: prompt ~120,495  TTFT median 2.76s (min 2.76, max 2.76)  decode median 133.6 tok/s  needles ok 0/1
+    call 3: prompt ~150,835  TTFT median 2.82s (min 2.82, max 2.82)  decode median 141.8 tok/s  needles ok 0/1
+    call 4: prompt ~201,142  TTFT median 4.7s (min 4.7, max 4.7)  decode median 176.6 tok/s  needles ok 0/1
+  wall time all agents done: 24.8s; all needles ok: False  GROW4_DONE
+GROW4_ALL_DONE
+################ grow4 [1x-alone-rerun-a]: 1 agent(s) at once, calls ~90K/120K/150K/200K  16:13:34
+  agent 0 call 1: prompt  90,189  TTFT    7.7s  decode 147.1 tok/s  out 256  total 9.43s  needles 4/4
+  agent 0 call 2: prompt 120,584  TTFT   2.76s  decode 194.8 tok/s  out 274  total 4.16s  needles 5/5
+  agent 0 call 3: prompt 150,959  TTFT   2.79s  decode 189.4 tok/s  out 289  total 4.31s  needles 6/6
+  agent 0 call 4: prompt 201,357  TTFT    4.7s  decode 189.7 tok/s  out 304  total 6.3s  needles 7/7
+  per call (median over agents):
+    call 1: prompt ~90,189  TTFT median 7.7s (min 7.7, max 7.7)  decode median 147.1 tok/s  needles ok 1/1
+    call 2: prompt ~120,584  TTFT median 2.76s (min 2.76, max 2.76)  decode median 194.8 tok/s  needles ok 1/1
+    call 3: prompt ~150,959  TTFT median 2.79s (min 2.79, max 2.79)  decode median 189.4 tok/s  needles ok 1/1
+    call 4: prompt ~201,357  TTFT median 4.7s (min 4.7, max 4.7)  decode median 189.7 tok/s  needles ok 1/1
+  wall time all agents done: 25.2s; all needles ok: True  GROW4_DONE
+################ grow4 [1x-alone-rerun-b]: 1 agent(s) at once, calls ~90K/120K/150K/200K  16:14:00
+  agent 0 call 1: prompt  90,203  TTFT   7.68s  decode 143.3 tok/s  out 229  total 9.27s  needles 4/4
+  agent 0 call 2: prompt 120,536  TTFT   2.73s  decode 172.4 tok/s  out 255  total 4.2s  needles 5/5
+  agent 0 call 3: prompt 150,926  TTFT   2.83s  decode 189.0 tok/s  out 271  total 4.26s  needles 6/6
+  agent 0 call 4: prompt 201,300  TTFT    4.7s  decode 204.6 tok/s  out 278  total 6.05s  needles 7/7
+  per call (median over agents):
+    call 1: prompt ~90,203  TTFT median 7.68s (min 7.68, max 7.68)  decode median 143.3 tok/s  needles ok 1/1
+    call 2: prompt ~120,536  TTFT median 2.73s (min 2.73, max 2.73)  decode median 172.4 tok/s  needles ok 1/1
+    call 3: prompt ~150,926  TTFT median 2.83s (min 2.83, max 2.83)  decode median 189.0 tok/s  needles ok 1/1
+    call 4: prompt ~201,300  TTFT median 4.7s (min 4.7, max 4.7)  decode median 204.6 tok/s  needles ok 1/1
+  wall time all agents done: 24.8s; all needles ok: True  GROW4_DONE

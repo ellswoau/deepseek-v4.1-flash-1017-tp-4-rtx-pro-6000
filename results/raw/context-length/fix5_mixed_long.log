@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/opt/ds41/tests/mixed_long.py", line 28, in <module>
+    SHORT = [[{"role": "user", "content": build(2000, 5000 + i, n_needles=0)[0] + "\nWrite a long, detailed maintenance report about these records."}] for i in range(8)]
+                                          ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 21, in build
+NameError: name 'random' is not defined. Did you forget to import 'random'?
+{'label': 'fix5-on', 'case': 'shorts_alone', 'per_stream': 77.5, 'total': 514.8}
+{'label': 'fix5-on', 'case': 'shorts_during_250K_decode', 'prime_ttft': 21.94, 'long_ttft': 0.38, 'long_decode': 119.3, 'per_stream': 59.8, 'per_stream_min': 57.5, 'total': 460.5, 'short_ttft_med': 0.41}
+{'label': 'fix5-on', 'case': 'shorts_during_1000K_decode', 'prime_ttft': 104.54, 'long_ttft': 1.49, 'long_decode': 83.4, 'per_stream': 45.4, 'per_stream_min': 42.0, 'total': 336.5, 'short_ttft_med': 0.41}
+MIXED_DONE
+{'label': 'fix5-off', 'case': 'shorts_alone', 'per_stream': 78.6, 'total': 540.6}
+{'label': 'fix5-off', 'case': 'shorts_during_250K_decode', 'prime_ttft': 25.27, 'long_ttft': 0.46, 'long_decode': 90.5, 'per_stream': 41.8, 'per_stream_min': 40.1, 'total': 321.2, 'short_ttft_med': 0.49}
+{'label': 'fix5-off', 'case': 'shorts_during_1000K_decode', 'prime_ttft': 104.03, 'long_ttft': 1.5, 'long_decode': 76.1, 'per_stream': 41.8, 'per_stream_min': 38.1, 'total': 304.9, 'short_ttft_med': 0.4}
+MIXED_DONE

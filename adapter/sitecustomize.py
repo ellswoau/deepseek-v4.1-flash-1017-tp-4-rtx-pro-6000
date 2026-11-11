@@ -12,6 +12,8 @@
    "is_sm100_or_newer() == 10" patch from #44445, this keeps DeepGEMM's dense FP4 indexer
    (prefill/decode) on SM120.
 
+5. Paged decode indexer on SM120 (opt-in, DS41_SM120_PAGED_INDEXER=1); see _patch_v41_scoring.
+
 Sybil's Engram row-store hook is NOT used: v0.5.23 has a native Engram host table
 (SGLANG_ENABLE_DSV41_ENGRAM_HOST_TABLE=1), and the method Sybil replaced no longer exists.
 """
@@ -96,10 +98,49 @@ def _patch_dsv4_host_pages(module):
     module._deepseek_v4_num_host_pages = _deepseek_v4_num_host_pages
 
 
+def _patch_v41_scoring(module):
+    """Fix 5 (opt-in, DS41_SM120_PAGED_INDEXER=1): use the paged decode indexer on SM120.
+
+    decode_scores() takes the paged path (fp4_index_logits_paged + top-k v2 JIT kernel) only when
+    get_platform().is_sm90. Every other GPU takes the dense path, which builds [bs, lmax] tensors
+    (slot gather, -inf masks, clone, torch.topk) where lmax is the CUDA-graph capture bound =
+    --context-length / ratio, NOT the live length. At 1M context every decode step of a 30K
+    conversation then pays for 262K columns per indexer layer (-15..-27% agent throughput vs
+    409,600). The paged kernels read the device-side lengths, so the work follows the real
+    conversation length. Verified on SM120: top-k v2 and amax_topk_blocks match torch.topk exactly
+    (tests/test_topk_v2_sm120.py).
+    """
+    if os.environ.get("DS41_SM120_PAGED_INDEXER") != "1":
+        return
+    from sglang.srt.utils.common import is_sm120
+
+    original = module.get_platform
+
+    class _PagedPlatform:
+        def __init__(self, platform):
+            self._platform = platform
+
+        def __getattr__(self, name):
+            return getattr(self._platform, name)
+
+        @property
+        def is_sm90(self):  # only read by decode_scores() in this module
+            return True
+
+    @functools.wraps(original)
+    def get_platform():
+        platform = original()
+        return _PagedPlatform(platform) if is_sm120() else platform
+
+    module.get_platform = get_platform
+    log.warning("DS41 SM120: paged decode indexer enabled (fp4_index_logits_paged + top-k v2)")
+
+
 PATCHES = {
     METADATA: _patch_metadata,
     V41_INDEXER: _patch_v41_indexer,
     "sglang.srt.mem_cache.hybrid_cache.hybrid_pool_assembler": _patch_dsv4_host_pages,
+    V41_INDEXER + ".scoring": _patch_v41_scoring,
 }
 
 

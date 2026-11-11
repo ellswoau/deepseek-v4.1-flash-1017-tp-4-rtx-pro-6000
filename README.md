@@ -1,10 +1,10 @@
 # DeepSeek-V4.1-Flash on 4 × RTX PRO 6000 (SM120) with stock SGLang v0.5.23
 
-This repo serves **DeepSeek-V4.1-Flash-1017** on one workstation with **four 96 GB RTX PRO 6000 Blackwell Max-Q GPUs** (SM120, PCIe only, no NVLink). It uses the **stock SGLang v0.5.23 image** plus three small SM120 runtime fixes. Engram tables live in locked, huge-page host RAM through SGLang's **native Engram host table**, and **HiCache** is on, with a larger sliding-window host pool.
+This repo serves **DeepSeek-V4.1-Flash-1017** on one workstation with **four 96 GB RTX PRO 6000 Blackwell Max-Q GPUs** (SM120, PCIe only, no NVLink). It uses the **stock SGLang v0.5.23 image** plus four small SM120 runtime fixes. Engram tables live in locked, huge-page host RAM through SGLang's **native Engram host table**, and **HiCache** is on, with a larger sliding-window host pool.
 
 It builds on the [Sybil 4 × RTX PRO 6000 build](https://github.com/sybil-solutions/deepseek-v4.1-flash-4x-rtx-pro-6000), which pins an earlier SGLang development image. Here, Sybil's SM120 fixes are ported to the v0.5.23 release. Its Engram row-store adapter is replaced by the upstream host table, and v0.5.23's new SM120 startup failure (sglang#44445) is fixed.
 
-> **Status:** experimental and measured on one machine. Throughput, prefix caching, tools, JSON and single-image vision have passed. Long-context (1M) acceptance and a 24 h soak are pending.
+> **Status:** experimental and measured on one machine. Throughput, prefix caching, tools, JSON, single-image vision and 1M-token context (32/32 needles, results §8 and §14) have passed, and a 4.9 h mixed-load soak ran with zero engine errors.
 
 ## 1. Results at a glance
 
@@ -33,11 +33,12 @@ The Engram huge-page setting matters. Without it, agent-shaped throughput at C=8
 | 2 | `adapter/sitecustomize.py`: set `PagedIndexerMetadata.force_deep_gemm_metadata` for compress ratio 1/2 on SM120. Ported from Sybil. | V4.1 ratio-1/2 indexers always call the FP4 DeepGEMM kernel. SM120 needs DeepGEMM's split planner metadata, and upstream never sets it. | MIT |
 | 3 | `adapter/sitecustomize.py`: guard `make_candidate_indexer`. When DeepGEMM paged *sparse* MQA logits are unavailable, it returns the dense-blocks backend, built exactly as the function's own early-return path does. New for v0.5.23. | v0.5.23 enables the sparse-table candidate indexer when `is_sm100_or_newer()` (capability ≥ 10, which includes SM120). It only enables the DeepGEMM kernel on SM100, so startup raises *"the candidate indexer needs DeepGEMM's paged sparse MQA logits"*. Unlike the `== 10` patch in sglang#44445, this keeps DeepGEMM's dense FP4 indexer on SM120. | MIT |
 | 4 | `adapter/sitecustomize.py` (opt-in, `DS41_DSV4_SWA_HOST_MULT`, default 11): multiply only the HiCache **SWA host pool** page count. New for v0.5.23. | v0.5.23 sizes the V4 SWA host pool as device SWA pages × `--hicache-ratio` (186 × 2 here). Cache-mode HiCache backs up one sliding window per inserted node, which means every prefill chunk, so the pool churns after a few hundred thousand tokens and prefixes whose window state is gone cannot be matched. With ×11 (4,092 pages, about 26 GB per GPU), an active 48K conversation stays reusable through 5.35M tokens of other traffic. Unpatched, it was lost by 2.35M. See results §6. | MIT |
-| 5 | `tuned_configs/`: Triton block-FP8 GEMM configs for RTX PRO 6000 Blackwell Max-Q, 11 shapes, `BLOCK_SIZE_K=32`. | SGLang ships none for this GPU ("Using default W8A8 Block FP8 kernel config"). The stock tuner can't tune block [32,32] (its search space has only 64/128 K-tiles; K-tile must equal the 32-element scale group). Kernel 1.2–4.5× faster; single-stream decode +40–55%, cold prefill +28% (results §10). | — |
+| 5 | `adapter/sitecustomize.py` (opt-in, `DS41_SM120_PAGED_INDEXER`, default 1): on SM120, make the DSV4 indexer's `decode_scores()` take the **paged** decode path (`fp4_index_logits_paged` + the top-k v2 JIT kernel) that upstream enables only on SM90. New for v0.5.23. | Elsewhere decode takes the dense path, whose tensors (slot gather, −inf masks, clone, `torch.topk`) are as wide as the CUDA-graph capture bound, i.e. `--context-length`/4, not the live length. At 1M context a 30K conversation paid for 262K columns per indexer layer every step: agent-shaped throughput −15% to −27% against 409,600. The paged kernels read device-side lengths. On SM120 they match `torch.topk` exactly (`tests/test_topk_v2_sm120.py`), and at 1M agent-shaped throughput is +12–60% over unpatched 1M and above unpatched 409,600 (results §14). | MIT |
+| 6 | `tuned_configs/`: Triton block-FP8 GEMM configs for RTX PRO 6000 Blackwell Max-Q, 11 shapes, `BLOCK_SIZE_K=32`. | SGLang ships none for this GPU ("Using default W8A8 Block FP8 kernel config"). The stock tuner can't tune block [32,32] (its search space has only 64/128 K-tiles; K-tile must equal the 32-element scale group). Kernel 1.2–4.5× faster; single-stream decode +40–55%, cold prefill +28% (results §10). | — |
 
 Nothing else is changed. Sybil's Engram row-store adapter is **not** used. v0.5.23's `SGLANG_ENABLE_DSV41_ENGRAM_HOST_TABLE=1` (shared layout, `cudaHostRegister`, the GPU reads rows directly) replaces it, and the method Sybil hooked no longer exists.
 
-Fixes 2–4 load through an import hook. They are active only when `DS41_SM120_INDEXER_FIX=1`, which the Dockerfile sets, and each startup logs `DS41 SM120: ... dense-blocks candidate indexer (use_deep_gemm_prefill=True)` on every rank.
+Fixes 2–5 load through an import hook. They are active only when `DS41_SM120_INDEXER_FIX=1`, which the Dockerfile sets, and each startup logs `DS41 SM120: ... dense-blocks candidate indexer (use_deep_gemm_prefill=True)` on every rank. Fix 5 also logs `DS41 SM120: paged decode indexer enabled`.
 
 ## 3. Requirements
 
@@ -74,11 +75,12 @@ On hosts with more than four GPUs, pin the engine with [compose.pin-gpus.example
 | Variable | Default | Notes |
 |---|---:|---|
 | `MAX_RUNNING_REQUESTS` | 16 | Also the decode CUDA-graph batch size. Agent-shaped throughput plateaus past about 16, and p99 TTFT grows quickly. |
-| `CONTEXT_LENGTH` | 409600 | The model limit is 1,048,576. 1M acceptance is pending. |
+| `CONTEXT_LENGTH` | 1048576 | The model limit. Passed 32/32 needles at 250K–1M; a cached 1M resend starts in ~2.7 s. Without fix 5, 1M costs 15–27% agent-shaped throughput (results §14). |
 | `MEMORY_FRACTION` | 0.92 | About 7 GB free per GPU after graphs at C16. |
 | `MAX_TOTAL_TOKENS` | 4200000 | FP8 KV pool, 4,199,936 tokens allocated. |
 | `CHUNKED_PREFILL_SIZE` | 4096 | Tokens per prefill chunk. Larger = faster cold prefill but in-flight streams slow down more during a big load; 2048 keeps streaming at full speed, 8192 is for batch use (results §11). |
 | `HICACHE_RATIO` | 2 | Main-KV host pool = 2 × GPU pool (8.4M tokens, about 14 GB per GPU). |
+| `DS41_SM120_PAGED_INDEXER` | 1 | Paged decode indexer on SM120 (fix 5). Set it to 0 to disable. |
 | `DS41_DSV4_SWA_HOST_MULT` | 11 | SWA host pool multiplier (fix 4). 4,092 pages, about 26 GB per GPU. Set it to 1 to disable. |
 | | | **With ≥ 768 GB host RAM**, set `HICACHE_RATIO=4` (keep ×11): 8,184 SWA pages, about 80 GB of pools per GPU. Idle 57K conversations then reload from host in 0.17 s after 4.7M tokens of other traffic (results §6). |
 | `PREFILL_DECODE_INTERVAL` | 8 | Decode rounds between prefill chunks of a long prompt, so streaming answers keep flowing during a big cold load. Costs ~19% TTFT for that load; 0 = maximum prefill throughput (results §9). |

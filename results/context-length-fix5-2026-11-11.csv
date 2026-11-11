@@ -1,0 +1,26 @@
+test,metric,C,ctx_409600_before_fix5,ctx_1m_before_fix5,ctx_1m_fix5,unit
+agent-shaped (30K shared prompt + 2K question; 512 out),total output,1,260,222,250,tok/s
+agent-shaped (30K shared prompt + 2K question; 512 out),total output,2,380,325,417,tok/s
+agent-shaped (30K shared prompt + 2K question; 512 out),total output,4,565,443,593,tok/s
+agent-shaped (30K shared prompt + 2K question; 512 out),total output,8,719,538,859,tok/s
+agent-shaped (30K shared prompt + 2K question; 512 out),total output,12,810,604,965,tok/s
+agent-shaped (30K shared prompt + 2K question; 512 out),total output,16,959,698,1209,tok/s
+agent-shaped (30K shared prompt + 2K question; 512 out),median TPOT,1,3.33,3.75,3.34,ms
+agent-shaped (30K shared prompt + 2K question; 512 out),median TPOT,4,5.84,7.87,5.79,ms
+agent-shaped (30K shared prompt + 2K question; 512 out),median TPOT,8,9.25,12.47,7.67,ms
+agent-shaped (30K shared prompt + 2K question; 512 out),median TPOT,16,13.93,19.44,11.30,ms
+agent-shaped (30K shared prompt + 2K question; 512 out),median TTFT,4,0.44,0.34,0.33,s
+agent-shaped (30K shared prompt + 2K question; 512 out),median TTFT,16,0.61,0.75,0.49,s
+profile load (agent-shaped C=8; 1024 out),total output,8,734,561,1069,tok/s
+profile load (agent-shaped C=8; 1024 out),median TPOT,8,9.58,12.51,6.40,ms
+cold prefill 32K,median TTFT,1,2.55,2.54,2.52,s
+GPU memory free after startup,per GPU,,7.01,5.51,7.44,GB
+8 short streams alone,per-stream decode median,8,,78.6,77.5,tok/s
+8 short streams while a 250K request decodes,per-stream decode median,9,,41.8,59.8,tok/s
+8 short streams while a 250K request decodes,250K request decode,9,,90.5,119.3,tok/s
+8 short streams while a 1M request decodes,per-stream decode median,9,,41.8,45.4,tok/s
+8 short streams while a 1M request decodes,1M request decode,9,,76.1,83.4,tok/s
+long context alone (Phase 7 harness; fix5 run),cold TTFT 250K / 500K / 750K / 1M,1,,,22.0 / 46.7 / 74.0 / 104.1,s
+long context alone (Phase 7 harness; fix5 run),decode 250K / 500K / 750K / 1M,1,,,280 / 190 / 194 / 181,tok/s
+long context (Phase 7 harness; fix5 run),needles found,,,,32/32 + cached 1M resend 2.74 s 1/1,
+growing context 90K->200K (grow4),4 agents wall time / 1 agent wall time,,,90.7 / 24.8,88.6 / 25.3,s
