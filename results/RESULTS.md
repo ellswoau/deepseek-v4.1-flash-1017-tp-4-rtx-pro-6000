@@ -132,3 +132,47 @@ Linux sees a single node and tier, and hands out the high (4-way) range first. [
 The Engram host tables ended up 100% in the 8-way range, and the HiCache pools mostly in the 4-way range. **Serving throughput did not change** beyond run-to-run noise (about ±8%), so it is bound by the GPUs and PCIe, not by host memory bandwidth. Doubling the channels added capacity and CPU-side bandwidth, not tokens per second. NCCL's SHM collectives did not get faster either.
 
 Full rows: [ram-upgrade-before-after-2026-11-11.csv](ram-upgrade-before-after-2026-11-11.csv).
+
+## 8. Long context, 1,048,576 tokens (Phase 7)
+
+Setup: tokenizer-exact prompts of maintenance-log filler with 4 "vault code" needles at 10/40/70/95% depth (`tests/phase7.py`), temperature 0. Engine before FP8 tuning, chunk 2048. Raw output: `raw/phase7/`.
+
+| Prompt tokens | Cold TTFT alone | Cold TTFT with 8 bg streams | Needles (alone / bg) |
+|---:|---:|---:|---|
+| 250,167 | 31.3 s | 27.3 s | 4/4, 4/4 |
+| 500,178 | 56.9 s | 57.7 s | 4/4, 4/4 |
+| 750,184 | 91.7 s | 92.3 s | 4/4, 4/4 |
+| 1,000,160 | 129.9 s | 130.1 s | 4/4, 4/4 |
+
+Cached resend of the 1M conversation with ~10K new tokens and a fifth needle: **2.89 s** TTFT, new needle found. No OOM. With interval 0, the background streams emitted nothing during every long prefill.
+
+## 9. Prefill/decode interleaving (`--prefill-decode-interval`)
+
+Test: 8 background streams plus one cold 250K prompt (`tests/pdi_test.py`). Raw output: `raw/phase7/pdi_results.jsonl`.
+
+| Setting | 250K TTFT | In-flight answers, tok/s before → during | New requests during the long prefill |
+|---|---:|---|---|
+| interval 0 | 27.2 s | 194 → 0 | blocked |
+| interval 8 | 32.4 s | 123 → 172 | first token after ~31.5 s |
+| interval 8 + shortest-prefill-first | 33.5 s | 185 → 148 | ~33.5 s |
+| mixed-chunk / interval 2 / interval 4 | 29.6 / 32.3 / 33.4 s | (total bg retained 9–15%) | — |
+
+Interval 8 keeps answers that are already streaming alive. New requests still queue behind an in-progress chunked prefill; no scheduling policy changes that. The cost is lower prefill throughput when several cold prompts arrive at once (§10).
+
+## 10. FP8 block-GEMM tuning (`tuned_configs/`)
+
+Kernel microbenchmark for N=1536, K=5120 (`tests/fp8bench.py`), default config → tuned:
+
+| M | 1 | 16 | 128 | 2048 |
+|---|---:|---:|---:|---:|
+| µs | 89.9 → 20.2 | 37.4 → 29.7 | 44.0 → 36.9 | 349.8 → 175.8 |
+
+End to end with Sybil's `matrix.py` (1,024 output, 409,600 context, C16 cap). Full table: [build-comparison-2026-11-11.csv](build-comparison-2026-11-11.csv).
+
+| | Sybil build | Untuned, interval 8 | **Tuned, interval 0** | **Tuned, interval 8** |
+|---|---:|---:|---:|---:|
+| Decode per stream, C=1, 2K–32K | 178–197 | 209 | 266–323 | 242–291 |
+| Total decode, C=8, 2K | 847 | 993 | 1,054 | 1,060 |
+| Cold prefill, C=1, 8K / 32K | 7,953 / 8,000 | 9,308 / 9,322 | 11,849 / 11,934 | 10,833 / 10,971 |
+| Prefill, C=4, 8K–32K | ~8,030 | ~5,800 | ~12,000 | ~6,900 |
+| Cold 32K TTFT, C=1 | 4.1 s | — | 2.7 s | 3.0 s |

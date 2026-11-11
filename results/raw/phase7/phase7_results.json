@@ -1,0 +1,193 @@
+{
+ "sizes": [
+  250000,
+  500000,
+  750000,
+  1000000
+ ],
+ "alone": [
+  {
+   "target": 250000,
+   "mode": "alone",
+   "found": 4,
+   "needles": 4,
+   "start": 1794366275.9255114,
+   "end": 1794366307.5058382,
+   "prompt_tokens": 250167,
+   "completion_tokens": 47,
+   "ttft_s": 31.34,
+   "total_s": 31.58,
+   "decode_tok_s": 195.1,
+   "answer": "silver otter vault: XT-69628\ncrimson lynx vault: XT-55840\njade badger vault: KR-79848\nviolet marten vault: QR-69761",
+   "expected": [
+    "silver otter: XT-69628",
+    "crimson lynx: XT-55840",
+    "jade badger: KR-79848",
+    "violet marten: QR-69761"
+   ]
+  },
+  {
+   "target": 500000,
+   "mode": "alone",
+   "found": 4,
+   "needles": 4,
+   "start": 1794366308.0056913,
+   "end": 1794366365.239196,
+   "prompt_tokens": 500178,
+   "completion_tokens": 45,
+   "ttft_s": 56.94,
+   "total_s": 57.23,
+   "decode_tok_s": 153.7,
+   "answer": "crimson lynx: VW-80677\njade badger: ZT-16359\nviolet marten: VW-88910\nochre ibis: XM-73630",
+   "expected": [
+    "crimson lynx: VW-80677",
+    "jade badger: ZT-16359",
+    "violet marten: VW-88910",
+    "ochre ibis: XM-73630"
+   ]
+  },
+  {
+   "target": 750000,
+   "mode": "alone",
+   "found": 4,
+   "needles": 4,
+   "start": 1794366366.03511,
+   "end": 1794366458.0762296,
+   "prompt_tokens": 750184,
+   "completion_tokens": 43,
+   "ttft_s": 91.73,
+   "total_s": 92.04,
+   "decode_tok_s": 140.1,
+   "answer": "jade badger: XM-32241\nviolet marten: VW-60375\nochre ibis: ZT-84219\ncobalt heron: VR-79483",
+   "expected": [
+    "jade badger: XM-32241",
+    "violet marten: VW-60375",
+    "ochre ibis: ZT-84219",
+    "cobalt heron: VR-79483"
+   ]
+  },
+  {
+   "target": 1000000,
+   "mode": "alone",
+   "found": 4,
+   "needles": 4,
+   "start": 1794366459.1087093,
+   "end": 1794366589.2292206,
+   "prompt_tokens": 1000160,
+   "completion_tokens": 39,
+   "ttft_s": 129.86,
+   "total_s": 130.12,
+   "decode_tok_s": 148.4,
+   "answer": "violet marten: KW-20228\nochre ibis: VR-95764\ncobalt heron: KT-54319\namber falcon: QT-20778",
+   "expected": [
+    "violet marten: KW-20228",
+    "ochre ibis: VR-95764",
+    "cobalt heron: KT-54319",
+    "amber falcon: QT-20778"
+   ]
+  }
+ ],
+ "cache": {
+  "prompt_tokens": 1010294,
+  "ttft_s": 2.89,
+  "decode_tok_s": 153.3,
+  "start": 1794366589.241839,
+  "new_needle_found": 1,
+  "answer": "violet marten: KW-20228\nochre ibis: VR-95764\ncobalt heron: XT-68405\namber falcon: QT-20778"
+ },
+ "with_bg": [
+  {
+   "target": 250000,
+   "mode": "with_bg",
+   "found": 4,
+   "needles": 4,
+   "start": 1794366652.689721,
+   "end": 1794366680.7653143,
+   "prompt_tokens": 250165,
+   "completion_tokens": 42,
+   "ttft_s": 27.33,
+   "total_s": 28.08,
+   "decode_tok_s": 56.4,
+   "answer": "jade badger: QW-13979\nviolet marten: XM-11503\nochre ibis: KW-12126\ncobalt heron: KM-67598",
+   "expected": [
+    "jade badger: QW-13979",
+    "violet marten: XM-11503",
+    "ochre ibis: KW-12126",
+    "cobalt heron: KM-67598"
+   ],
+   "bg_tok_s_baseline": 129.6,
+   "bg_tok_s_during_prefill": 0.0,
+   "bg_tok_s_during_decode": 116.7
+  },
+  {
+   "target": 500000,
+   "mode": "with_bg",
+   "found": 4,
+   "needles": 4,
+   "start": 1794366701.3170216,
+   "end": 1794366760.0955598,
+   "prompt_tokens": 500182,
+   "completion_tokens": 41,
+   "ttft_s": 57.68,
+   "total_s": 58.78,
+   "decode_tok_s": 37.5,
+   "answer": "violet marten: QM-65095\nochre ibis: QM-52753\ncobalt heron: KM-69116\namber falcon: KT-28301",
+   "expected": [
+    "violet marten: QM-65095",
+    "ochre ibis: QM-52753",
+    "cobalt heron: KM-69116",
+    "amber falcon: KT-28301"
+   ],
+   "bg_tok_s_baseline": 70.3,
+   "bg_tok_s_during_prefill": 0.0,
+   "bg_tok_s_during_decode": 70.1
+  },
+  {
+   "target": 750000,
+   "mode": "with_bg",
+   "found": 4,
+   "needles": 4,
+   "start": 1794366780.999612,
+   "end": 1794366874.0235457,
+   "prompt_tokens": 750187,
+   "completion_tokens": 44,
+   "ttft_s": 92.27,
+   "total_s": 93.02,
+   "decode_tok_s": 58.7,
+   "answer": "ochre ibis vault: KT-63665\ncobalt heron vault: XW-98696\namber falcon vault: KR-66065\nsilver otter vault: KT-14728",
+   "expected": [
+    "ochre ibis: KT-63665",
+    "cobalt heron: XW-98696",
+    "amber falcon: KR-66065",
+    "silver otter: KT-14728"
+   ],
+   "bg_tok_s_baseline": 71.2,
+   "bg_tok_s_during_prefill": 0.0,
+   "bg_tok_s_during_decode": 104.8
+  },
+  {
+   "target": 1000000,
+   "mode": "with_bg",
+   "found": 4,
+   "needles": 4,
+   "start": 1794366895.1840353,
+   "end": 1794367026.9059007,
+   "prompt_tokens": 1000184,
+   "completion_tokens": 42,
+   "ttft_s": 130.06,
+   "total_s": 131.72,
+   "decode_tok_s": 25.3,
+   "answer": "cobalt heron: QR-74500\namber falcon: VW-13780\nsilver otter: VM-90185\ncrimson lynx: XR-42558",
+   "expected": [
+    "cobalt heron: QR-74500",
+    "amber falcon: VW-13780",
+    "silver otter: VM-90185",
+    "crimson lynx: XR-42558"
+   ],
+   "bg_tok_s_baseline": 74.3,
+   "bg_tok_s_during_prefill": 0.0,
+   "bg_tok_s_during_decode": 46.9
+  }
+ ],
+ "bg_errors": []
+}

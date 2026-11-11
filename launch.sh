@@ -26,6 +26,7 @@ exec python3 -m sglang.launch_server \
   --cuda-graph-max-bs-decode "${MAX_RUNNING_REQUESTS:-16}" \
   --chunked-prefill-size "${CHUNKED_PREFILL_SIZE:-2048}" \
   --min-free-slots-delay 1 --random-seed 0 \
+  --prefill-decode-interval "${PREFILL_DECODE_INTERVAL:-8}" \
   --speculative-algorithm DSPARK --speculative-dspark-block-size 5 \
   --enable-decoder-swa-bounded-replay \
   --tool-call-parser deepseekv41 --reasoning-parser deepseek-v41 \

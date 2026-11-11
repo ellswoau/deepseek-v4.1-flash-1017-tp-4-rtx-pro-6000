@@ -7,6 +7,7 @@ FROM lmsysorg/sglang@sha256:f832b5c39559c9caa900b22ad37c76fcce66470676855c420521
 COPY runtime/flash_mla_sm120.py /sgl-workspace/sglang/python/sglang/kernels/ops/attention/flash_mla_sm120.py
 # Fixes 2 + 3: DSV4 indexer metadata + candidate-indexer guard, applied at import time (MIT)
 COPY adapter/sitecustomize.py /opt/ds41/adapter/sitecustomize.py
+COPY tuned_configs/ /sgl-workspace/sglang/python/sglang/kernels/ops/gemm/configs/
 COPY launch.sh /opt/ds41/launch.sh
 ENV PYTHONPATH=/opt/ds41/adapter DS41_SM120_INDEXER_FIX=1
 EXPOSE 8010

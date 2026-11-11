@@ -1,0 +1,13 @@
+=== alone
+[alone] ~250K: prompt 250,167 tok, TTFT 31.34s, decode 195.1 tok/s, needles 4/4
+[alone] ~500K: prompt 500,178 tok, TTFT 56.94s, decode 153.7 tok/s, needles 4/4
+[alone] ~750K: prompt 750,184 tok, TTFT 91.73s, decode 140.1 tok/s, needles 4/4
+[alone] ~1000K: prompt 1,000,160 tok, TTFT 129.86s, decode 148.4 tok/s, needles 4/4
+=== cache: resend the largest conversation + ~10K new tokens
+[cache] prompt 1,010,294 tok, TTFT 2.89s, new needle found 1/1
+=== with 8 background streams
+[with_bg] ~250K: prompt 250,165 tok, TTFT 27.33s, decode 56.4 tok/s, needles 4/4, bg tok/s base 129.6 / prefill 0.0 / decode 116.7
+[with_bg] ~500K: prompt 500,182 tok, TTFT 57.68s, decode 37.5 tok/s, needles 4/4, bg tok/s base 70.3 / prefill 0.0 / decode 70.1
+[with_bg] ~750K: prompt 750,187 tok, TTFT 92.27s, decode 58.7 tok/s, needles 4/4, bg tok/s base 71.2 / prefill 0.0 / decode 104.8
+[with_bg] ~1000K: prompt 1,000,184 tok, TTFT 130.06s, decode 25.3 tok/s, needles 4/4, bg tok/s base 74.3 / prefill 0.0 / decode 46.9
+PHASE7_DONE
