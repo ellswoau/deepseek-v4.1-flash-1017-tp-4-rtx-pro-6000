@@ -1,6 +1,6 @@
 # DeepSeek-V4.1-Flash on 4 × RTX PRO 6000 (SM120) with stock SGLang v0.5.23
 
-This repo serves **DeepSeek-V4.1-Flash-1017** on one workstation with **four 96 GB RTX PRO 6000 Blackwell Max-Q GPUs** (SM120, PCIe only, no NVLink). It uses the **stock SGLang v0.5.23 image** plus three small SM120 runtime fixes. Engram tables live in locked, huge-page host RAM through SGLang's **native Engram host table**, and **HiCache** is on.
+This repo serves **DeepSeek-V4.1-Flash-1017** on one workstation with **four 96 GB RTX PRO 6000 Blackwell Max-Q GPUs** (SM120, PCIe only, no NVLink). It uses the **stock SGLang v0.5.23 image** plus three small SM120 runtime fixes. Engram tables live in locked, huge-page host RAM through SGLang's **native Engram host table**, and **HiCache** is on, with a larger sliding-window host pool.
 
 It builds on the [Sybil 4 × RTX PRO 6000 build](https://github.com/sybil-solutions/deepseek-v4.1-flash-4x-rtx-pro-6000), which pins an earlier SGLang development image. Here, Sybil's SM120 fixes are ported to the v0.5.23 release. Its Engram row-store adapter is replaced by the upstream host table, and v0.5.23's new SM120 startup failure (sglang#44445) is fixed.
 
@@ -32,16 +32,17 @@ The Engram huge-page setting matters. Without it, agent-shaped throughput at C=8
 | 1 | `runtime/flash_mla_sm120.py`: also split V4.1's ratio-1/2 **extra** KV source (256/128-token pages) into 64-token pages for the FlashInfer SM120 sparse-MLA prefill, using its own scratch buffer. Ported from Sybil. The 13-line diff is in [runtime/flash_mla_sm120.patch](runtime/flash_mla_sm120.patch). | Without it, FlashInfer rejects `extra_page_block_size=128` and prefill falls back to Triton: about 294 tok/s at 1M (sglang#44445) against about 8K tok/s here. | Apache-2.0 (SGLang) |
 | 2 | `adapter/sitecustomize.py`: set `PagedIndexerMetadata.force_deep_gemm_metadata` for compress ratio 1/2 on SM120. Ported from Sybil. | V4.1 ratio-1/2 indexers always call the FP4 DeepGEMM kernel. SM120 needs DeepGEMM's split planner metadata, and upstream never sets it. | MIT |
 | 3 | `adapter/sitecustomize.py`: guard `make_candidate_indexer`. When DeepGEMM paged *sparse* MQA logits are unavailable, it returns the dense-blocks backend, built exactly as the function's own early-return path does. New for v0.5.23. | v0.5.23 enables the sparse-table candidate indexer when `is_sm100_or_newer()` (capability ≥ 10, which includes SM120). It only enables the DeepGEMM kernel on SM100, so startup raises *"the candidate indexer needs DeepGEMM's paged sparse MQA logits"*. Unlike the `== 10` patch in sglang#44445, this keeps DeepGEMM's dense FP4 indexer on SM120. | MIT |
+| 4 | `adapter/sitecustomize.py` (opt-in, `DS41_DSV4_SWA_HOST_MULT`, default 11): multiply only the HiCache **SWA host pool** page count. New for v0.5.23. | v0.5.23 sizes the V4 SWA host pool as device SWA pages × `--hicache-ratio` (186 × 2 here). Cache-mode HiCache backs up one sliding window per inserted node, which means every prefill chunk, so the pool churns after a few hundred thousand tokens and prefixes whose window state is gone cannot be matched. With ×11 (4,092 pages, about 26 GB per GPU), an active 48K conversation stays reusable through 5.35M tokens of other traffic. Unpatched, it was lost by 2.35M. See results §6. | MIT |
 
 Nothing else is changed. Sybil's Engram row-store adapter is **not** used. v0.5.23's `SGLANG_ENABLE_DSV41_ENGRAM_HOST_TABLE=1` (shared layout, `cudaHostRegister`, the GPU reads rows directly) replaces it, and the method Sybil hooked no longer exists.
 
-Fixes 2 and 3 load through an import hook. They are active only when `DS41_SM120_INDEXER_FIX=1`, which the Dockerfile sets, and each startup logs `DS41 SM120: ... dense-blocks candidate indexer (use_deep_gemm_prefill=True)` on every rank.
+Fixes 2–4 load through an import hook. They are active only when `DS41_SM120_INDEXER_FIX=1`, which the Dockerfile sets, and each startup logs `DS41 SM120: ... dense-blocks candidate indexer (use_deep_gemm_prefill=True)` on every rank.
 
 ## 3. Requirements
 
 - 4 × RTX PRO 6000 Blackwell (96 GB, SM120). Tested on the 300 W Max-Q edition.
 - An NVIDIA open driver ≥ 580 (tested on 595.99.02), Docker with Compose v2, and the NVIDIA Container Toolkit.
-- **About 400 GB host RAM:** 189 GiB of locked Engram tables, about 168 GiB of HiCache host pool at `HICACHE_RATIO=4`, plus headroom. Tested with 512 GB DDR5-6400.
+- **About 400 GB host RAM:** 189 GiB of locked Engram tables, about 162 GB of HiCache host pools (`HICACHE_RATIO=2` plus SWA ×11, about 40 GB per GPU), plus headroom. Tested with 512 GB DDR5-6400.
 - About 520 GB of local NVMe for the checkpoint (`deepseek-ai/DeepSeek-V4.1-Flash-1017`).
 - **Host prep (required for full speed):** transparent huge pages for shmem set to `advise`. See [host/README.md](host/README.md).
 
@@ -76,7 +77,8 @@ On hosts with more than four GPUs, pin the engine with [compose.pin-gpus.example
 | `MEMORY_FRACTION` | 0.92 | About 7 GB free per GPU after graphs at C16. |
 | `MAX_TOTAL_TOKENS` | 4200000 | FP8 KV pool, 4,199,936 tokens allocated. |
 | `CHUNKED_PREFILL_SIZE` | 2048 | |
-| `HICACHE_RATIO` | 4 | Host KV pool = 4 × GPU pool (about 168 GiB). |
+| `HICACHE_RATIO` | 2 | Main-KV host pool = 2 × GPU pool (8.4M tokens, about 14 GB per GPU). |
+| `DS41_DSV4_SWA_HOST_MULT` | 11 | SWA host pool multiplier (fix 4). 4,092 pages, about 26 GB per GPU. Set it to 1 to disable. |
 | `EXTRA_ARGS` | — | Appended to `sglang.launch_server`. |
 
 Fixed: TP4/EP4, `dsv4` attention, `flashinfer_mxfp4` MoE, FP8 KV, DSpark block 5, `--min-free-slots-delay 1`, decoder SWA bounded replay, `deepseekv41` tool parser, `deepseek-v41` reasoning parser, write-through HiCache, `--enable-metrics` (Prometheus at `/metrics`).

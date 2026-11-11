@@ -1,0 +1,13 @@
+=== Test A: multi-turn prefix cache
+  think-off turn 1: prompt 52,234 tok, TTFT 10.33s, out 34
+  think-off turn 2: prompt 54,012 tok, TTFT 0.28s, out 36
+  think-off turn 3: prompt 55,792 tok, TTFT 0.26s, out 71
+  think-on turn 1: prompt 52,225 tok, TTFT 5.29s, out 200
+  think-on turn 2: prompt 53,988 tok, TTFT 0.26s, out 200
+  think-on turn 3: prompt 55,739 tok, TTFT 0.28s, out 200
+=== Test B: flood ~4,700,000 unique tokens to evict GPU cache, then resend
+  pre-flood resend: prompt 57,573, TTFT 0.27s
+  flood: 43 requests, ~4,730,000 tokens, 483.5s
+  post-flood resend: prompt 57,573, TTFT 5.93s
+  cold reference (same size, new prefix): prompt 57,594, TTFT 5.96s
+PHASE6_DONE

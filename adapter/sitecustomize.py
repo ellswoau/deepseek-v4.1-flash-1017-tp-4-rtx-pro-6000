@@ -70,7 +70,37 @@ def _patch_v41_indexer(module):
     module.make_candidate_indexer = make_candidate_indexer
 
 
-PATCHES = {METADATA: _patch_metadata, V41_INDEXER: _patch_v41_indexer}
+def _patch_dsv4_host_pages(module):
+    """Fix 4 (opt-in): size the DSV4 HiCache SWA host pool independently.
+
+    v0.5.23 sets SWA host pages = device SWA pages x --hicache-ratio. The device SWA pool is small
+    (~48K tokens here), and cache-mode HiCache backs up one sliding window per inserted node (every
+    chunked-prefill chunk), so the SWA host pool churns after a few hundred thousand tokens of other
+    traffic and evicted prefixes can no longer be matched, even though their full KV is still in host
+    RAM. DS41_DSV4_SWA_HOST_MULT multiplies only the SWA host page count (the older
+    SGLANG_DSV4_HICACHE_SWA_RATIO knob no longer exists).
+    """
+    mult = float(os.environ.get("DS41_DSV4_SWA_HOST_MULT", "1") or 1)
+    if mult == 1:
+        return
+    original = module._deepseek_v4_num_host_pages
+
+    @functools.wraps(original)
+    def _deepseek_v4_num_host_pages(**kwargs):
+        full, swa, c128 = original(**kwargs)
+        new_swa = int(swa * mult)
+        log.warning("DS41 DSV4 HiCache: SWA host pages %d -> %d (x%g); full host pages %d",
+                    swa, new_swa, mult, full)
+        return full, new_swa, c128
+
+    module._deepseek_v4_num_host_pages = _deepseek_v4_num_host_pages
+
+
+PATCHES = {
+    METADATA: _patch_metadata,
+    V41_INDEXER: _patch_v41_indexer,
+    "sglang.srt.mem_cache.hybrid_cache.hybrid_pool_assembler": _patch_dsv4_host_pages,
+}
 
 
 class _Loader(importlib.abc.Loader):

@@ -29,6 +29,6 @@ exec python3 -m sglang.launch_server \
   --speculative-algorithm DSPARK --speculative-dspark-block-size 5 \
   --enable-decoder-swa-bounded-replay \
   --tool-call-parser deepseekv41 --reasoning-parser deepseek-v41 \
-  --enable-hicache --hicache-ratio "${HICACHE_RATIO:-4}" --hicache-write-policy write_through \
+  --enable-hicache --hicache-ratio "${HICACHE_RATIO:-2}" --hicache-write-policy write_through \
   --enable-metrics --watchdog-timeout 3600 \
   ${EXTRA_ARGS:-}

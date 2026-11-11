@@ -1,0 +1,8 @@
+cold build: 4.96 s
+warm resend: 0.22 s
+after cumulative flood ~50,000 tokens: resend TTFT 0.15 s
+after cumulative flood ~250,000 tokens: resend TTFT 0.16 s
+after cumulative flood ~850,000 tokens: resend TTFT 0.15 s
+after cumulative flood ~2,350,000 tokens: resend TTFT 0.16 s
+after cumulative flood ~5,350,000 tokens: resend TTFT 0.15 s
+PHASE6B_DONE

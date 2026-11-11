@@ -91,3 +91,19 @@ The whole previous prefix is reused (256-token pages). There is no cap around 11
 HiCache does write KV to host RAM: 4.9M of 16.8M host tokens were used and none were dropped. The problem is the size of the host pool for sliding-window state. `_deepseek_v4_num_host_pages` sets it to device SWA pages × `hicache_ratio` (here 186 × 4 = 744 pages). A hybrid-SWA prefix cannot be matched without its window state.
 
 A stepwise test showed that a 48K conversation stays reusable through 850K tokens of other traffic (0.15 s TTFT), but not through 2.35M, which is well before the 4.2M-token GPU pool fills.
+
+## 6. HiCache SWA host-pool patch (fix 4)
+
+`DS41_DSV4_SWA_HOST_MULT` multiplies only the V4 SWA host pool. Measured with the Phase 6 scripts (`tests/phase6.py`, `tests/phase6b.py`):
+
+| Config | Host pools per GPU | Multi-turn (Test A) | Active 48K conversation, resent between floods totalling 5.35M tokens | Idle 57K conversation after one 4.73M-token flood |
+|---|---:|---|---|---|
+| stock: ratio 4, 744 SWA pages | 32 GB | 0.26–0.29 s | lost by 2.35M (4.96 s) | cold (5.95 s) |
+| **ratio 2 + SWA ×11 (4,092 pages)** (default) | **40 GB** | 0.27–0.29 s | **kept: 0.15 s, 48,128 tokens cached** | cold (5.96 s) |
+| ratio 4 + SWA ×5.5 (4,092 pages) | 54 GB | 0.26–0.28 s | — | cold (5.93 s) |
+
+Cache-mode HiCache backs up about 0.45 SWA tokens per token of traffic, one window per prefill chunk. For an *idle* conversation to survive F tokens of other traffic, the SWA host tier needs about 0.45 × F tokens, at about 25 KB per token per GPU.
+
+For F = 4.7M that is about 53 GB per GPU of SWA alone, about 250 GB of host pools in total, which does not fit beside the 189 GiB Engram tables on a 512 GB host. *Active* conversations survive anyway, because each resend refreshes their place in the cache.
+
+Note: every v0.5.23 start logs `Metadata glue-graph capture failed ... falling back to eager metadata prep` once per rank, because DSpark draft metadata calls `seq_lens.tolist()` during capture. All v0.5.23 numbers here include that fallback.
