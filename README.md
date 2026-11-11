@@ -1,14 +1,33 @@
 # DeepSeek-V4.1-Flash on 4 × RTX PRO 6000 (SM120) with stock SGLang v0.5.23
 
-This repo serves **DeepSeek-V4.1-Flash-1017** on one workstation with **four 96 GB RTX PRO 6000 Blackwell Max-Q GPUs** (SM120, PCIe only, no NVLink). It uses the **stock SGLang v0.5.23 image** plus four small SM120 runtime fixes. Engram tables live in locked, huge-page host RAM through SGLang's **native Engram host table**, and **HiCache** is on, with a larger sliding-window host pool.
+This repo serves **DeepSeek-V4.1-Flash-1017** on one workstation with **four 96 GB RTX PRO 6000 Blackwell Max-Q GPUs** (SM120, PCIe only, no NVLink). It uses the **stock SGLang v0.5.23 image** plus five small SM120 runtime fixes and tuned FP8 kernels. Engram tables live in locked, huge-page host RAM through SGLang's **native Engram host table**, and **HiCache** is on, with a larger sliding-window host pool.
 
 It builds on the [Sybil 4 × RTX PRO 6000 build](https://github.com/sybil-solutions/deepseek-v4.1-flash-4x-rtx-pro-6000), which pins an earlier SGLang development image. Here, Sybil's SM120 fixes are ported to the v0.5.23 release. Its Engram row-store adapter is replaced by the upstream host table, and v0.5.23's new SM120 startup failure (sglang#44445) is fixed.
+
+**What the fixes do, in short:**
+
+1. **Sparse-MLA prefill on SM120.** FlashInfer's SM120 prefill kernel can handle V4.1's 256/128-token pages, so prefill runs at ~8K tok/s instead of ~294 (ported from Sybil).
+2. **DeepGEMM FP4 indexer metadata on SM120** (ported from Sybil).
+3. **Startup guard** for the candidate indexer on SM120 (sglang#44445), keeping DeepGEMM's dense FP4 indexer.
+4. **HiCache SWA host pool sizing.** Cached conversations stay reusable from host RAM.
+5. **Paged decode indexer on SM120 (new).** Full **1,048,576-token context with no speed cost.**
+   - Upstream uses the paged indexer only on Hopper. Every other GPU's decode scores and ranks the whole max-context width every step.
+   - At 1M that cost 15–27% of agent throughput. With the fix, agent-shaped C=16 goes 698 → **1,209 tok/s**, faster than 409,600 context without it.
+   - Spare GPU memory goes up. See [results §14](results/RESULTS.md#14-context-length-cost-and-fix-5-paged-decode-indexer-on-sm120).
+6. **Tuned Triton FP8 block-GEMM configs** for this GPU: +40–55% single-stream decode.
 
 > **Status:** experimental and measured on one machine. Throughput, prefix caching, tools, JSON, single-image vision and 1M-token context (32/32 needles, results §8 and §14) have passed, and a 4.9 h mixed-load soak ran with zero engine errors.
 
 ## 1. Results at a glance
 
 These numbers use the same hardware, the same weights, the same `sglang.benchmark.serving` workloads, engine settings C16 (or C32 for the Sybil column), 409,600 context and DSpark block 5. Full tables are in [results/RESULTS.md](results/RESULTS.md).
+
+This table is from the first v0.5.23 build. The final production config adds tuned FP8 kernels, chunk 4096, interval 8, 1M context and fix 5. Against the Sybil build it measures:
+- **Steady decode:** 214 → 329 tok/s per stream at C=1, and 1,014 → 1,280 tok/s total at C=16.
+- **Agent-shaped total at C=16:** 778 → 1,209 tok/s.
+- **Cold 32K TTFT:** 3.19 → 2.52 s.
+
+Details are in results §13–§14.
 
 | Workload | C | Sybil build | **This build** | Change |
 |---|---:|---:|---:|---:|
