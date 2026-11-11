@@ -107,3 +107,27 @@ Cache-mode HiCache backs up about 0.45 SWA tokens per token of traffic, one wind
 For F = 4.7M that is about 53 GB per GPU of SWA alone, about 250 GB of host pools in total, which does not fit beside the 189 GiB Engram tables on a 512 GB host. *Active* conversations survive anyway, because each resend refreshes their place in the cache.
 
 Note: every v0.5.23 start logs `Metadata glue-graph capture failed ... falling back to eager metadata prep` once per rank, because DSpark draft metadata calls `seq_lens.tolist()` during capture. All v0.5.23 numbers here include that fallback.
+
+## 7. Host memory: 4 channels to 8 channels (mixed DIMMs)
+
+The upgrade went from 4 × 128 GB DDR5-6400 to 4 × 128 GB DDR5-6400 plus 4 × 64 GB DDR5-5600, 768 GB in total. All DIMMs train at **5600 MT/s**.
+
+The BIOS creates **one NUMA node** with two interleave sets:
+- 512 GB **8-way**: 64 GB from every DIMM.
+- 256 GB **4-way**: the upper half of the 128 GB DIMMs.
+
+Linux sees a single node and tier, and hands out the high (4-way) range first. [benchmarks/regionbw.c](../benchmarks/regionbw.c) measures each range using 1 GiB pages sorted by physical address. [benchmarks/whereis.py](../benchmarks/whereis.py) shows which range backs the engine's buffers.
+
+| Measurement | 4 ch (before) | 768 GB mixed (after) |
+|---|---:|---:|
+| STREAM Triad, 8-way range | — | **226.5 GB/s** |
+| STREAM Triad, 4-way range | — | 128.1 GB/s |
+| STREAM Triad, ordinary allocation | 128.9 GB/s | 123.4 GB/s (lands in the 4-way range) |
+| NCCL all_reduce / alltoall busbw (SHM) | 20.4 / 20.3 GB/s | 20.0 / 20.2 GB/s |
+| Steady decode C=1 / 8 / 16, total tok/s | 215 / 827 / 1,147 | 227 / 822 / 1,173 |
+| Agent-shaped C=1 / 8 / 16, total tok/s | 190 / 699 / 901 | 186 / 695 / 914 |
+| Cold 32K prefill TTFT | 3.19 s | 3.07 s |
+
+The Engram host tables ended up 100% in the 8-way range, and the HiCache pools mostly in the 4-way range. **Serving throughput did not change** beyond run-to-run noise (about ±8%), so it is bound by the GPUs and PCIe, not by host memory bandwidth. Doubling the channels added capacity and CPU-side bandwidth, not tokens per second. NCCL's SHM collectives did not get faster either.
+
+Full rows: [ram-upgrade-before-after-2026-11-11.csv](ram-upgrade-before-after-2026-11-11.csv).

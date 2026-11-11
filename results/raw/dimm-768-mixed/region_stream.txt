@@ -1,0 +1,6 @@
+1 GiB pages: 317 below 0x8080000000 (8-way region), 227 at/above (4-way region)
+8-way interleaved region (low)     Copy   225.5 GB/s   Triad   226.5 GB/s   (threads=36)
+4-way interleaved region (high)    Copy   101.3 GB/s   Triad   128.1 GB/s   (threads=36)
+1 GiB pages: 317 below 0x8080000000 (8-way region), 227 at/above (4-way region)
+8-way interleaved region (low)     Copy   207.6 GB/s   Triad   226.1 GB/s   (threads=18)
+4-way interleaved region (high)    Copy    98.3 GB/s   Triad   114.4 GB/s   (threads=18)

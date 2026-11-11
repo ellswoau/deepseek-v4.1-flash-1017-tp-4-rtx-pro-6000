@@ -1,0 +1,70 @@
+Test,Concurrency,Metric,Before: 4 x 128 GB DDR5-6400 (4 ch),After: 768 GB mixed @5600 (8-ch 512 GB + 4-ch 256 GB),Change
+Steady decode (1K in / 2K out),1,Total output tok/s,215.0,226.67,+5.4%
+Steady decode (1K in / 2K out),1,Per-stream decode tok/s,224.7,251.3,+11.8%
+Steady decode (1K in / 2K out),1,Median TTFT s,0.138,0.145,+5.1%
+Steady decode (1K in / 2K out),1,P99 TTFT s,0.156,0.156,+0.0%
+Steady decode (1K in / 2K out),1,DSpark accept length,4.38,4.96,+13.2%
+Steady decode (1K in / 2K out),2,Total output tok/s,389.62,368.13,-5.5%
+Steady decode (1K in / 2K out),2,Per-stream decode tok/s,232.6,221.7,-4.7%
+Steady decode (1K in / 2K out),2,Median TTFT s,0.16,0.158,-1.3%
+Steady decode (1K in / 2K out),2,P99 TTFT s,0.174,0.185,+6.3%
+Steady decode (1K in / 2K out),2,DSpark accept length,4.76,4.71,-1.1%
+Steady decode (1K in / 2K out),4,Total output tok/s,543.13,544.57,+0.3%
+Steady decode (1K in / 2K out),4,Per-stream decode tok/s,153.6,149.9,-2.4%
+Steady decode (1K in / 2K out),4,Median TTFT s,0.177,0.174,-1.7%
+Steady decode (1K in / 2K out),4,P99 TTFT s,0.236,0.224,-5.1%
+Steady decode (1K in / 2K out),4,DSpark accept length,4.67,4.65,-0.4%
+Steady decode (1K in / 2K out),8,Total output tok/s,826.91,821.91,-0.6%
+Steady decode (1K in / 2K out),8,Per-stream decode tok/s,121.7,118.2,-2.9%
+Steady decode (1K in / 2K out),8,Median TTFT s,0.197,0.191,-3.0%
+Steady decode (1K in / 2K out),8,P99 TTFT s,0.708,0.348,-50.8%
+Steady decode (1K in / 2K out),8,DSpark accept length,4.7,4.63,-1.5%
+Steady decode (1K in / 2K out),12,Total output tok/s,957.66,909.8,-5.0%
+Steady decode (1K in / 2K out),12,Per-stream decode tok/s,91.5,91.6,+0.1%
+Steady decode (1K in / 2K out),12,Median TTFT s,0.221,0.221,+0.0%
+Steady decode (1K in / 2K out),12,P99 TTFT s,0.717,0.497,-30.7%
+Steady decode (1K in / 2K out),12,DSpark accept length,4.68,4.64,-0.9%
+Steady decode (1K in / 2K out),16,Total output tok/s,1147.1,1172.57,+2.2%
+Steady decode (1K in / 2K out),16,Per-stream decode tok/s,86.7,88.8,+2.4%
+Steady decode (1K in / 2K out),16,Median TTFT s,0.226,0.227,+0.4%
+Steady decode (1K in / 2K out),16,P99 TTFT s,0.726,0.642,-11.6%
+Steady decode (1K in / 2K out),16,DSpark accept length,4.68,4.64,-0.9%
+"Agent-shaped (30K shared + 2K, 512 out)",1,Total output tok/s,190.44,185.5,-2.6%
+"Agent-shaped (30K shared + 2K, 512 out)",1,Per-stream decode tok/s,224.2,204.9,-8.6%
+"Agent-shaped (30K shared + 2K, 512 out)",1,Median TTFT s,0.355,0.352,-0.8%
+"Agent-shaped (30K shared + 2K, 512 out)",1,P99 TTFT s,0.368,0.362,-1.6%
+"Agent-shaped (30K shared + 2K, 512 out)",1,DSpark accept length,4.41,4.87,+10.4%
+"Agent-shaped (30K shared + 2K, 512 out)",2,Total output tok/s,328.87,333.93,+1.5%
+"Agent-shaped (30K shared + 2K, 512 out)",2,Per-stream decode tok/s,179.9,182.8,+1.6%
+"Agent-shaped (30K shared + 2K, 512 out)",2,Median TTFT s,0.326,0.32,-1.8%
+"Agent-shaped (30K shared + 2K, 512 out)",2,P99 TTFT s,0.397,0.391,-1.5%
+"Agent-shaped (30K shared + 2K, 512 out)",2,DSpark accept length,4.72,4.7,-0.4%
+"Agent-shaped (30K shared + 2K, 512 out)",4,Total output tok/s,493.29,525.93,+6.6%
+"Agent-shaped (30K shared + 2K, 512 out)",4,Per-stream decode tok/s,140.6,155.0,+10.2%
+"Agent-shaped (30K shared + 2K, 512 out)",4,Median TTFT s,0.419,0.413,-1.4%
+"Agent-shaped (30K shared + 2K, 512 out)",4,P99 TTFT s,0.637,0.665,+4.4%
+"Agent-shaped (30K shared + 2K, 512 out)",4,DSpark accept length,4.64,4.65,+0.2%
+"Agent-shaped (30K shared + 2K, 512 out)",8,Total output tok/s,698.84,694.57,-0.6%
+"Agent-shaped (30K shared + 2K, 512 out)",8,Per-stream decode tok/s,105.2,102.2,-2.9%
+"Agent-shaped (30K shared + 2K, 512 out)",8,Median TTFT s,0.476,0.484,+1.7%
+"Agent-shaped (30K shared + 2K, 512 out)",8,P99 TTFT s,1.357,1.331,-1.9%
+"Agent-shaped (30K shared + 2K, 512 out)",8,DSpark accept length,4.69,4.63,-1.3%
+"Agent-shaped (30K shared + 2K, 512 out)",12,Total output tok/s,710.34,767.66,+8.1%
+"Agent-shaped (30K shared + 2K, 512 out)",12,Per-stream decode tok/s,70.0,72.4,+3.4%
+"Agent-shaped (30K shared + 2K, 512 out)",12,Median TTFT s,0.471,0.433,-8.1%
+"Agent-shaped (30K shared + 2K, 512 out)",12,P99 TTFT s,1.536,1.529,-0.5%
+"Agent-shaped (30K shared + 2K, 512 out)",12,DSpark accept length,4.66,4.64,-0.4%
+"Agent-shaped (30K shared + 2K, 512 out)",16,Total output tok/s,901.11,913.96,+1.4%
+"Agent-shaped (30K shared + 2K, 512 out)",16,Per-stream decode tok/s,64.0,64.2,+0.3%
+"Agent-shaped (30K shared + 2K, 512 out)",16,Median TTFT s,0.4,0.44,+10.0%
+"Agent-shaped (30K shared + 2K, 512 out)",16,P99 TTFT s,2.031,1.987,-2.2%
+"Agent-shaped (30K shared + 2K, 512 out)",16,DSpark accept length,4.67,4.65,-0.4%
+Cold 32K prefill,1,Median TTFT s,3.185,3.072,-3.5%
+"Host memory: STREAM Triad 36 threads, normal allocation",,GB/s,128.9,123.4,-4.3% (lands in the 4-ch region first)
+"Host memory: STREAM Triad 36 threads, 8-ch region (1 GiB hugepages by phys addr)",,GB/s,,226.5,+75.7% vs before
+"Host memory: STREAM Triad 36 threads, 4-ch region",,GB/s,,128.1,-0.6% vs before
+"Host memory: STREAM Copy 36 threads, 8-ch / 4-ch region",,GB/s,114.8,225.5 / 101.3,
+NCCL all_reduce busbw (default SHM),,GB/s,20.36,20.0,-1.8%
+NCCL alltoall busbw (default SHM),,GB/s,20.33,20.19,-0.7%
+NCCL all_reduce / alltoall busbw (P2P_LEVEL=SYS),,GB/s,24.93 / 2.02,24.92 / 2.02,0%
+Raw P2P unidirectional per pair,,GB/s,38-42,37.7-42.1,0%

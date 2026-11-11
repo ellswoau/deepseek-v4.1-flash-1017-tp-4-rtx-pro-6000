@@ -1,0 +1,10 @@
+threads=18 array=4.0 GiB
+Copy       98.3 GB/s
+Scale      98.3 GB/s
+Add       115.4 GB/s
+Triad     114.5 GB/s
+threads=36 array=4.0 GiB
+Copy      103.0 GB/s
+Scale     102.8 GB/s
+Add       122.8 GB/s
+Triad     123.4 GB/s

@@ -1,0 +1,13 @@
+ 1282.2 GiB  [anon]                                            low   0.0%  high   0.0%  nonres 100.0%
+  403.6 GiB  [anon]                                            low   0.0%  high   0.0%  nonres 100.0%
+  296.8 GiB  [anon]                                            low   0.0%  high   0.0%  nonres 100.0%
+  213.7 GiB  [anon]                                            low   0.0%  high   0.0%  nonres 100.0%
+   94.4 GiB  /memfd:sglang_engram_14 (deleted)                 low 100.0%  high   0.0%  nonres   0.0%
+   94.4 GiB  /memfd:sglang_engram_1 (deleted)                  low 100.0%  high   0.0%  nonres   0.0%
+   24.5 GiB  /dev/zero (deleted)                               low  39.4%  high  60.6%  nonres   0.0%
+   15.9 GiB  [anon]                                            low   0.0%  high   0.0%  nonres 100.0%
+    8.1 GiB  [anon]                                            low   0.0%  high   0.0%  nonres 100.0%
+    6.9 GiB  /dev/zero (deleted)                               low   0.0%  high 100.0%  nonres   0.0%
+    4.6 GiB  /dev/zero (deleted)                               low   0.0%  high 100.0%  nonres   0.0%
+    2.4 GiB  [heap]                                            low  51.3%  high  41.0%  nonres   7.7%
+TOTAL (mappings >= 1 GiB): 8-way (low) 200 GiB, 4-way (high) 27 GiB, not resident 2223 GiB
